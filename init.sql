@@ -96,6 +96,101 @@ CREATE TABLE sales_order_item (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Create product_category table
+CREATE TABLE product_category (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(32) UNIQUE NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    parent_id INTEGER REFERENCES product_category(id),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create product table
+CREATE TABLE product (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(32) UNIQUE NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    category_id INTEGER REFERENCES product_category(id),
+    unit VARCHAR(16) NOT NULL,
+    specification VARCHAR(128),
+    description TEXT,
+    status VARCHAR(16) DEFAULT 'ACTIVE', -- ACTIVE, INACTIVE
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create supplier table
+CREATE TABLE supplier (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(32) UNIQUE NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    contact_person VARCHAR(64),
+    phone VARCHAR(32),
+    email VARCHAR(128),
+    address TEXT,
+    tax_number VARCHAR(64),
+    bank_name VARCHAR(128),
+    bank_account VARCHAR(64),
+    status VARCHAR(16) DEFAULT 'ACTIVE', -- ACTIVE, INACTIVE
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create customer table
+CREATE TABLE customer (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(32) UNIQUE NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    contact_person VARCHAR(64),
+    phone VARCHAR(32),
+    email VARCHAR(128),
+    address TEXT,
+    tax_number VARCHAR(64),
+    bank_name VARCHAR(128),
+    bank_account VARCHAR(64),
+    status VARCHAR(16) DEFAULT 'ACTIVE', -- ACTIVE, INACTIVE
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create inventory table
+CREATE TABLE inventory (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL REFERENCES product(id),
+    warehouse VARCHAR(64) DEFAULT 'MAIN',
+    quantity NUMERIC(18,3) DEFAULT 0,
+    unit_cost NUMERIC(18,2) DEFAULT 0, -- 单位成本
+    total_cost NUMERIC(18,2) DEFAULT 0, -- 总成本
+    cost_method VARCHAR(16) DEFAULT 'WEIGHTED_AVERAGE', -- 成本核算方法: WEIGHTED_AVERAGE, FIFO
+    last_updated TIMESTAMP DEFAULT NOW(),
+    UNIQUE(product_id, warehouse)
+);
+
+-- Create inventory_transaction table
+CREATE TABLE inventory_transaction (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL REFERENCES product(id),
+    transaction_type VARCHAR(16) NOT NULL, -- IN, OUT
+    quantity NUMERIC(18,3) NOT NULL,
+    unit_cost NUMERIC(18,2) NOT NULL, -- 交易时的单位成本
+    total_cost NUMERIC(18,2) NOT NULL, -- 交易时的总成本
+    reference_type VARCHAR(32), -- PURCHASE_ORDER, SALES_ORDER, etc.
+    reference_id INTEGER, -- 关联的订单ID
+    warehouse VARCHAR(64) DEFAULT 'MAIN',
+    transaction_date TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create inventory_fifo_layer table (用于先进先出法的成本核算)
+CREATE TABLE inventory_fifo_layer (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL REFERENCES product(id),
+    quantity NUMERIC(18,3) NOT NULL,
+    unit_cost NUMERIC(18,2) NOT NULL,
+    total_cost NUMERIC(18,2) NOT NULL,
+    remaining_quantity NUMERIC(18,3) NOT NULL,
+    receipt_date TIMESTAMP DEFAULT NOW(), -- 入库日期
+    warehouse VARCHAR(64) DEFAULT 'MAIN'
+);
+
 -- Create indexes
 CREATE INDEX idx_voucher_date ON finance_voucher(voucher_date);
 CREATE INDEX idx_voucher_entry_account ON finance_voucher_entry(account_code);
@@ -106,6 +201,11 @@ CREATE INDEX idx_purchase_order_item_order ON purchase_order_item(order_id);
 CREATE INDEX idx_sales_order_date ON sales_order(order_date);
 CREATE INDEX idx_sales_order_status ON sales_order(status);
 CREATE INDEX idx_sales_order_item_order ON sales_order_item(order_id);
+CREATE INDEX idx_product_category ON product(category_id);
+CREATE INDEX idx_inventory_product ON inventory(product_id);
+CREATE INDEX idx_inventory_transaction_product ON inventory_transaction(product_id);
+CREATE INDEX idx_inventory_transaction_date ON inventory_transaction(transaction_date);
+CREATE INDEX idx_inventory_fifo_layer_product ON inventory_fifo_layer(product_id);
 
 -- Insert sample data
 INSERT INTO finance_account (code, name, account_type, balance_direction, is_leaf) VALUES

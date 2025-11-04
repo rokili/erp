@@ -54,6 +54,144 @@ type CreateAccountDTO struct {
 	IsLeaf           bool   `json:"is_leaf"`
 }
 
+// ProductCategory represents a product category
+type ProductCategory struct {
+	ID          int64     `db:"id" json:"id"`
+	Code        string    `db:"code" json:"code"`
+	Name        string    `db:"name" json:"name"`
+	ParentID    *int64    `db:"parent_id" json:"parent_id"`
+	Description string    `db:"description" json:"description"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+}
+
+// CreateProductCategoryDTO represents the data transfer object for creating a product category
+type CreateProductCategoryDTO struct {
+	Code        string `json:"code"`
+	Name        string `json:"name"`
+	ParentID    *int64 `json:"parent_id"`
+	Description string `json:"description"`
+}
+
+// Product represents a product
+type Product struct {
+	ID            int64     `db:"id" json:"id"`
+	Code          string    `db:"code" json:"code"`
+	Name          string    `db:"name" json:"name"`
+	CategoryID    *int64    `db:"category_id" json:"category_id"`
+	Unit          string    `db:"unit" json:"unit"`
+	Specification string    `db:"specification" json:"specification"`
+	Description   string    `db:"description" json:"description"`
+	Status        string    `db:"status" json:"status"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
+}
+
+// CreateProductDTO represents the data transfer object for creating a product
+type CreateProductDTO struct {
+	Code          string `json:"code"`
+	Name          string `json:"name"`
+	CategoryID    *int64 `json:"category_id"`
+	Unit          string `json:"unit"`
+	Specification string `json:"specification"`
+	Description   string `json:"description"`
+}
+
+// Supplier represents a supplier
+type Supplier struct {
+	ID            int64     `db:"id" json:"id"`
+	Code          string    `db:"code" json:"code"`
+	Name          string    `db:"name" json:"name"`
+	ContactPerson string    `db:"contact_person" json:"contact_person"`
+	Phone         string    `db:"phone" json:"phone"`
+	Email         string    `db:"email" json:"email"`
+	Address       string    `db:"address" json:"address"`
+	TaxNumber     string    `db:"tax_number" json:"tax_number"`
+	BankName      string    `db:"bank_name" json:"bank_name"`
+	BankAccount   string    `db:"bank_account" json:"bank_account"`
+	Status        string    `db:"status" json:"status"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
+}
+
+// CreateSupplierDTO represents the data transfer object for creating a supplier
+type CreateSupplierDTO struct {
+	Code          string `json:"code"`
+	Name          string `json:"name"`
+	ContactPerson string `json:"contact_person"`
+	Phone         string `json:"phone"`
+	Email         string `json:"email"`
+	Address       string `json:"address"`
+	TaxNumber     string `json:"tax_number"`
+	BankName      string `json:"bank_name"`
+	BankAccount   string `json:"bank_account"`
+}
+
+// Customer represents a customer
+type Customer struct {
+	ID            int64     `db:"id" json:"id"`
+	Code          string    `db:"code" json:"code"`
+	Name          string    `db:"name" json:"name"`
+	ContactPerson string    `db:"contact_person" json:"contact_person"`
+	Phone         string    `db:"phone" json:"phone"`
+	Email         string    `db:"email" json:"email"`
+	Address       string    `db:"address" json:"address"`
+	TaxNumber     string    `db:"tax_number" json:"tax_number"`
+	BankName      string    `db:"bank_name" json:"bank_name"`
+	BankAccount   string    `db:"bank_account" json:"bank_account"`
+	Status        string    `db:"status" json:"status"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
+}
+
+// CreateCustomerDTO represents the data transfer object for creating a customer
+type CreateCustomerDTO struct {
+	Code          string `json:"code"`
+	Name          string `json:"name"`
+	ContactPerson string `json:"contact_person"`
+	Phone         string `json:"phone"`
+	Email         string `json:"email"`
+	Address       string `json:"address"`
+	TaxNumber     string `json:"tax_number"`
+	BankName      string `json:"bank_name"`
+	BankAccount   string `json:"bank_account"`
+}
+
+// Inventory represents product inventory
+type Inventory struct {
+	ID          int64     `db:"id" json:"id"`
+	ProductID   int64     `db:"product_id" json:"product_id"`
+	Warehouse   string    `db:"warehouse" json:"warehouse"`
+	Quantity    float64   `db:"quantity" json:"quantity"`
+	UnitCost    float64   `db:"unit_cost" json:"unit_cost"`
+	TotalCost   float64   `db:"total_cost" json:"total_cost"`
+	CostMethod  string    `db:"cost_method" json:"cost_method"`
+	LastUpdated time.Time `db:"last_updated" json:"last_updated"`
+}
+
+// InventoryTransaction represents an inventory transaction
+type InventoryTransaction struct {
+	ID              int64     `db:"id" json:"id"`
+	ProductID       int64     `db:"product_id" json:"product_id"`
+	TransactionType string    `db:"transaction_type" json:"transaction_type"` // IN, OUT
+	Quantity        float64   `db:"quantity" json:"quantity"`
+	UnitCost        float64   `db:"unit_cost" json:"unit_cost"`
+	TotalCost       float64   `db:"total_cost" json:"total_cost"`
+	ReferenceType   string    `db:"reference_type" json:"reference_type"`
+	ReferenceID     *int64    `db:"reference_id" json:"reference_id"`
+	Warehouse       string    `db:"warehouse" json:"warehouse"`
+	TransactionDate time.Time `db:"transaction_date" json:"transaction_date"`
+	CreatedAt       time.Time `db:"created_at" json:"created_at"`
+}
+
+// InventoryFIFOLayer represents a FIFO cost layer
+type InventoryFIFOLayer struct {
+	ID           int64     `db:"id" json:"id"`
+	ProductID    int64     `db:"product_id" json:"product_id"`
+	Quantity     float64   `db:"quantity" json:"quantity"`
+	UnitCost     float64   `db:"unit_cost" json:"unit_cost"`
+	TotalCost    float64   `db:"total_cost" json:"total_cost"`
+	RemainingQty float64   `db:"remaining_quantity" json:"remaining_quantity"`
+	ReceiptDate  time.Time `db:"receipt_date" json:"receipt_date"`
+	Warehouse    string    `db:"warehouse" json:"warehouse"`
+}
+
 // PurchaseOrder represents a purchase order
 type PurchaseOrder struct {
 	ID           int64               `db:"id" json:"id"`
