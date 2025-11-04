@@ -31,7 +31,7 @@ type Account struct {
 	Name             string    `db:"name" json:"name"`
 	AccountType      string    `db:"account_type" json:"account_type"`
 	BalanceDirection string    `db:"balance_direction" json:"balance_direction"`
-	ParentCode       string    `db:"parent_code" json:"parent_code"`
+	ParentCode       *string   `db:"parent_code" json:"parent_code"`
 	IsLeaf           bool      `db:"is_leaf" json:"is_leaf"`
 	Status           string    `db:"status" json:"status"`
 	CreatedAt        time.Time `db:"created_at" json:"created_at"`

@@ -2,7 +2,6 @@ package service
 
 import (
 	"erp/internal/model"
-	"erp/internal/repository"
 	"errors"
 	"time"
 
@@ -10,10 +9,35 @@ import (
 )
 
 type Service struct {
-	repo *repository.Repository
+	repo Repository
 }
 
-func New(repo *repository.Repository) *Service {
+// Repository 接口定义
+type Repository interface {
+	// Voucher operations
+	CreateVoucher(voucher *model.Voucher) error
+	GetVoucher(id int64) (*model.Voucher, error)
+	ListVouchers(limit, offset int) ([]*model.Voucher, error)
+
+	// Account operations
+	CreateAccount(account *model.Account) error
+	GetAccount(code string) (*model.Account, error)
+	ListAccounts() ([]*model.Account, error)
+
+	// PurchaseOrder operations
+	CreatePurchaseOrder(order *model.PurchaseOrder) error
+	GetPurchaseOrder(id int64) (*model.PurchaseOrder, error)
+	ListPurchaseOrders(limit, offset int) ([]*model.PurchaseOrder, error)
+	UpdatePurchaseOrderStatus(id int64, status string) error
+
+	// SalesOrder operations
+	CreateSalesOrder(order *model.SalesOrder) error
+	GetSalesOrder(id int64) (*model.SalesOrder, error)
+	ListSalesOrders(limit, offset int) ([]*model.SalesOrder, error)
+	UpdateSalesOrderStatus(id int64, status string) error
+}
+
+func New(repo Repository) *Service {
 	return &Service{repo: repo}
 }
 
@@ -25,7 +49,7 @@ func (s *Service) CreateVoucher(dto *model.CreateVoucherDTO) (*model.Voucher, er
 	}
 
 	// 计算总金额
-	totalAmount := s.calculateTotalAmount(dto.Entries)
+	totalAmount := s.calculateVoucherTotal(dto.Entries)
 
 	// 生成凭证号
 	voucherNo := s.generateVoucherNo()
@@ -54,41 +78,46 @@ func (s *Service) validateVoucher(dto *model.CreateVoucherDTO) error {
 		return errors.New("凭证日期不能为空")
 	}
 
-	if len(dto.Entries) < 2 {
-		return errors.New("凭证至少需要两个分录")
+	if len(dto.Entries) == 0 {
+		return errors.New("凭证至少需要一个分录")
 	}
 
-	// 验证借贷平衡
-	var totalDebit, totalCredit float64
+	// 验证凭证明细
+	totalDebit := 0.0
+	totalCredit := 0.0
 	for _, entry := range dto.Entries {
+		if entry.AccountCode == "" {
+			return errors.New("科目代码不能为空")
+		}
+
 		if entry.DebitAmount < 0 || entry.CreditAmount < 0 {
-			return errors.New("金额不能为负数")
+			return errors.New("借贷金额不能为负数")
 		}
 
 		if entry.DebitAmount > 0 && entry.CreditAmount > 0 {
-			return errors.New("同一分录不能同时有借方和贷方金额")
+			return errors.New("同一分录不能同时有借贷金额")
+		}
+
+		if entry.DebitAmount == 0 && entry.CreditAmount == 0 {
+			return errors.New("借贷金额不能同时为零")
 		}
 
 		totalDebit += entry.DebitAmount
 		totalCredit += entry.CreditAmount
 	}
 
+	// 检查借贷平衡
 	if totalDebit != totalCredit {
-		return errors.New("凭证借贷不平衡")
+		return errors.New("借贷金额不平衡")
 	}
 
 	return nil
 }
 
-func (s *Service) calculateTotalAmount(entries []model.VoucherEntry) float64 {
-	var total float64
+func (s *Service) calculateVoucherTotal(entries []model.VoucherEntry) float64 {
+	total := 0.0
 	for _, entry := range entries {
-		if entry.DebitAmount > total {
-			total = entry.DebitAmount
-		}
-		if entry.CreditAmount > total {
-			total = entry.CreditAmount
-		}
+		total += entry.DebitAmount + entry.CreditAmount
 	}
 	return total
 }
@@ -126,10 +155,15 @@ func (s *Service) CreateAccount(dto *model.CreateAccountDTO) (*model.Account, er
 		Name:             dto.Name,
 		AccountType:      dto.AccountType,
 		BalanceDirection: dto.BalanceDirection,
-		ParentCode:       dto.ParentCode,
+		ParentCode:       &dto.ParentCode,
 		IsLeaf:           dto.IsLeaf,
 		Status:           "ACTIVE",
 		CreatedAt:        time.Now(),
+	}
+
+	// 如果 ParentCode 为空字符串，则设置为 nil
+	if dto.ParentCode == "" {
+		account.ParentCode = nil
 	}
 
 	// 保存到数据库
