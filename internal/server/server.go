@@ -54,6 +54,14 @@ func New(cfg *config.Config) *Server {
 }
 
 func registerRoutes(router *gin.Engine, handler *handler.Handler) {
+	// 提供静态文件服务
+	router.Static("/web", "./web")
+
+	// 默认页面重定向到 web 界面
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/web")
+	})
+
 	// 健康检查
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})

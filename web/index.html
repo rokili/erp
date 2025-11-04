@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP 系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ERP 系统</h1>
+            <nav>
+                <button id="accounts-btn">会计科目</button>
+                <button id="vouchers-btn">会计凭证</button>
+                <button id="purchase-orders-btn">采购订单</button>
+                <button id="sales-orders-btn">销售订单</button>
+            </nav>
+        </header>
+
+        <main>
+            <section id="accounts-section" class="section">
+                <h2>会计科目管理</h2>
+                <form id="account-form">
+                    <input type="text" id="account-code" placeholder="科目代码" required>
+                    <input type="text" id="account-name" placeholder="科目名称" required>
+                    <select id="account-type">
+                        <option value="ASSET">资产</option>
+                        <option value="LIABILITY">负债</option>
+                        <option value="EQUITY">权益</option>
+                        <option value="INCOME">收入</option>
+                        <option value="EXPENSE">费用</option>
+                    </select>
+                    <button type="submit">创建科目</button>
+                </form>
+                <div id="accounts-list"></div>
+            </section>
+
+            <section id="vouchers-section" class="section" style="display:none;">
+                <h2>会计凭证管理</h2>
+                <form id="voucher-form">
+                    <input type="date" id="voucher-date" required>
+                    <input type="text" id="voucher-description" placeholder="凭证描述" required>
+                    <div id="entries-container">
+                        <div class="entry">
+                            <input type="text" class="entry-account" placeholder="科目代码" required>
+                            <input type="number" class="entry-debit" placeholder="借方金额" step="0.01">
+                            <input type="number" class="entry-credit" placeholder="贷方金额" step="0.01">
+                        </div>
+                    </div>
+                    <button type="button" id="add-entry">添加分录</button>
+                    <button type="submit">创建凭证</button>
+                </form>
+                <div id="vouchers-list"></div>
+            </section>
+
+            <section id="purchase-orders-section" class="section" style="display:none;">
+                <h2>采购订单管理</h2>
+                <form id="purchase-order-form">
+                    <input type="text" id="po-supplier-code" placeholder="供应商代码" required>
+                    <input type="text" id="po-supplier-name" placeholder="供应商名称" required>
+                    <input type="date" id="po-date" required>
+                    <input type="date" id="po-delivery-date" required>
+                    <div id="po-items-container">
+                        <div class="po-item">
+                            <input type="text" class="item-code" placeholder="商品代码" required>
+                            <input type="text" class="item-name" placeholder="商品名称" required>
+                            <input type="number" class="item-quantity" placeholder="数量" required>
+                            <input type="number" class="item-price" placeholder="单价" step="0.01" required>
+                        </div>
+                    </div>
+                    <button type="button" id="add-po-item">添加商品</button>
+                    <button type="submit">创建采购订单</button>
+                </form>
+                <div id="purchase-orders-list"></div>
+            </section>
+
+            <section id="sales-orders-section" class="section" style="display:none;">
+                <h2>销售订单管理</h2>
+                <form id="sales-order-form">
+                    <input type="text" id="so-customer-code" placeholder="客户代码" required>
+                    <input type="text" id="so-customer-name" placeholder="客户名称" required>
+                    <input type="date" id="so-date" required>
+                    <input type="date" id="so-delivery-date" required>
+                    <div id="so-items-container">
+                        <div class="so-item">
+                            <input type="text" class="item-code" placeholder="商品代码" required>
+                            <input type="text" class="item-name" placeholder="商品名称" required>
+                            <input type="number" class="item-quantity" placeholder="数量" required>
+                            <input type="number" class="item-price" placeholder="单价" step="0.01" required>
+                        </div>
+                    </div>
+                    <button type="button" id="add-so-item">添加商品</button>
+                    <button type="submit">创建销售订单</button>
+                </form>
+                <div id="sales-orders-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
