@@ -5,6 +5,7 @@ import (
 )
 
 type Config struct {
+<<<<<<< HEAD
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 }
@@ -22,6 +23,24 @@ type DatabaseConfig struct {
 	Password string `mapstructure:"password"`
 	Name     string `mapstructure:"name"`
 	SSLMode  string `mapstructure:"sslmode"`
+=======
+	Server   ServerConfig
+	Database DatabaseConfig
+}
+
+type ServerConfig struct {
+	Host string
+	Port string
+}
+
+type DatabaseConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
+	SSLMode  string
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 }
 
 func Load() *Config {
@@ -32,6 +51,7 @@ func Load() *Config {
 	// 设置默认值
 	viper.SetDefault("server.host", "localhost")
 	viper.SetDefault("server.port", "8080")
+<<<<<<< HEAD
 	viper.SetDefault("server.debug", true)
 	viper.SetDefault("database.host", "localhost")
 	viper.SetDefault("database.port", 5432)
@@ -50,4 +70,22 @@ func Load() *Config {
 	}
 
 	return &config
+=======
+	viper.SetDefault("database.host", "localhost")
+	viper.SetDefault("database.port", "5432")
+	viper.SetDefault("database.user", "erp_user")
+	viper.SetDefault("database.name", "erp_system")
+	viper.SetDefault("database.sslmode", "disable")
+
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err)
+	}
+
+	var cfg Config
+	if err := viper.Unmarshal(&cfg); err != nil {
+		panic(err)
+	}
+
+	return &cfg
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 }

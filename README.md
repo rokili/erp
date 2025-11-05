@@ -23,11 +23,14 @@
    - 库存跟踪
    - 成本核算（加权平均法、先进先出法）
 
+<<<<<<< HEAD
 5. 用户权限管理
    - 用户管理
    - 角色管理
    - 基于角色的权限控制（RBAC）
 
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ## 技术栈
 
 - Go 1.21
@@ -47,7 +50,10 @@
 │   ├── repository/    # 数据访问层
 │   ├── server/        # 服务启动
 │   └── service/       # 业务逻辑层
+<<<<<<< HEAD
 ├── tools/             # 工具程序
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ├── web/               # 前端静态文件
 ├── config.yaml        # 配置文件
 ├── init.sql           # 数据库初始化脚本
@@ -60,7 +66,10 @@
 
 首先确保已安装并运行 PostgreSQL 数据库，然后执行以下步骤：
 
+<<<<<<< HEAD
 #### 方法一：使用psql命令行工具
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ```bash
 # 连接到PostgreSQL
 psql -U postgres
@@ -69,6 +78,7 @@ psql -U postgres
 \i init.sql
 ```
 
+<<<<<<< HEAD
 #### 方法二：使用Go程序初始化数据库（推荐）
 如果系统中没有安装PostgreSQL客户端工具，可以使用我们提供的Go程序来初始化数据库：
 
@@ -103,6 +113,8 @@ psql -U postgres
    - Windows: 双击运行 `import_remote_db.bat` 或在PowerShell中执行 `.\import_remote_db.ps1`
    - Linux/Mac: 执行命令 `psql -h localhost -p 5432 -U postgres -d erp_system -f import_remote_db.sql`
 
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ### 2. 配置文件
 
 编辑 [config.yaml](file:///d:/soft/pg/erp/config.yaml) 文件，根据实际情况修改数据库连接信息：
@@ -131,6 +143,7 @@ go mod tidy
 go run main.go
 ```
 
+<<<<<<< HEAD
 或者编译并运行：
 
 ```bash
@@ -141,6 +154,8 @@ go build -o erp-system.exe main.go
 ./erp-system.exe
 ```
 
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ## 系统开账功能
 
 系统支持开账管理，确保财务数据的严谨性：
@@ -152,6 +167,7 @@ go build -o erp-system.exe main.go
    - 通过前端界面或API调用开账接口
    - 开账后所有凭证必须借贷平衡
 
+<<<<<<< HEAD
 ## 用户权限管理
 
 系统实现了基于角色的访问控制（RBAC），包含以下6个预定义角色：
@@ -165,6 +181,8 @@ go build -o erp-system.exe main.go
 
 每个角色都有固定的权限分配，确保用户只能访问其职责范围内的功能。
 
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ## API 接口
 
 ### 系统管理
@@ -200,9 +218,15 @@ go build -o erp-system.exe main.go
 ### 采购管理
 
 #### 供应商
+<<<<<<< HEAD
 - `POST /api/purchase/suppliers` - 创建供应商
 - `GET /api/purchase/suppliers/{id}` - 获取供应商
 - `GET /api/purchase/suppliers` - 获取所有供应商
+=======
+- `POST /api/suppliers` - 创建供应商
+- `GET /api/suppliers/{id}` - 获取供应商
+- `GET /api/suppliers` - 获取所有供应商
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 
 #### 采购订单
 - `POST /api/purchase/orders` - 创建采购订单
@@ -214,9 +238,15 @@ go build -o erp-system.exe main.go
 ### 销售管理
 
 #### 客户
+<<<<<<< HEAD
 - `POST /api/sales/customers` - 创建客户
 - `GET /api/sales/customers/{id}` - 获取客户
 - `GET /api/sales/customers` - 获取所有客户
+=======
+- `POST /api/customers` - 创建客户
+- `GET /api/customers/{id}` - 获取客户
+- `GET /api/customers` - 获取所有客户
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 
 #### 销售订单
 - `POST /api/sales/orders` - 创建销售订单
@@ -225,6 +255,7 @@ go build -o erp-system.exe main.go
 - `PUT /api/sales/orders/{id}/approve` - 审批销售订单
 - `PUT /api/sales/orders/{id}/close` - 关闭销售订单
 
+<<<<<<< HEAD
 ### 用户权限管理
 
 #### 用户管理
@@ -244,6 +275,8 @@ go build -o erp-system.exe main.go
 - `GET /api/user-roles/{user_id}/permissions` - 获取用户权限列表
 - `GET /api/role-permissions/{role_id}/permissions` - 获取角色权限列表
 
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ## 示例请求
 
 ### 系统开账
@@ -316,7 +349,11 @@ POST /api/products
 
 ### 创建供应商
 ```json
+<<<<<<< HEAD
 POST /api/purchase/suppliers
+=======
+POST /api/suppliers
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 {
   "code": "SUP001",
   "name": "供应商A",
@@ -332,7 +369,11 @@ POST /api/purchase/suppliers
 
 ### 创建客户
 ```json
+<<<<<<< HEAD
 POST /api/sales/customers
+=======
+POST /api/customers
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 {
   "code": "CUS001",
   "name": "客户A",
@@ -390,6 +431,7 @@ POST /api/sales/orders
     }
   ]
 }
+<<<<<<< HEAD
 ```
 
 ### 创建用户
@@ -417,4 +459,6 @@ POST /api/roles
 ```bash
 # 为ID为1的用户分配ID为1的角色
 curl -X POST http://localhost:8080/api/user-roles/1/roles/1
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 ```

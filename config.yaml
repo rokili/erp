@@ -1,7 +1,10 @@
 server:
   host: localhost
   port: 8080
+<<<<<<< HEAD
   debug: true
+=======
+>>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 
 database:
   host: localhost
