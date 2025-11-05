@@ -44,6 +44,12 @@ type Repository interface {
 	GetCustomer(id int64) (*model.Customer, error)
 	ListCustomers() ([]*model.Customer, error)
 
+	// SystemConfig operations
+	GetSystemConfig(key string) (*model.SystemConfig, error)
+	SetSystemConfig(key, value, description string) error
+	IsSystemOpened() (bool, error)
+	OpenSystem() error
+
 	// PurchaseOrder operations
 	CreatePurchaseOrder(order *model.PurchaseOrder) error
 	GetPurchaseOrder(id int64) (*model.PurchaseOrder, error)
@@ -63,8 +69,14 @@ func New(repo Repository) *Service {
 
 // Voucher operations
 func (s *Service) CreateVoucher(dto *model.CreateVoucherDTO) (*model.Voucher, error) {
+	// 检查系统是否已开账
+	isOpened, err := s.repo.IsSystemOpened()
+	if err != nil {
+		return nil, err
+	}
+
 	// 验证凭证数据
-	if err := s.validateVoucher(dto); err != nil {
+	if err := s.validateVoucher(dto, isOpened); err != nil {
 		return nil, err
 	}
 
@@ -92,7 +104,7 @@ func (s *Service) CreateVoucher(dto *model.CreateVoucherDTO) (*model.Voucher, er
 	return voucher, nil
 }
 
-func (s *Service) validateVoucher(dto *model.CreateVoucherDTO) error {
+func (s *Service) validateVoucher(dto *model.CreateVoucherDTO, systemOpened bool) error {
 	// 检查必需字段
 	if dto.VoucherDate.IsZero() {
 		return errors.New("凭证日期不能为空")
@@ -102,33 +114,51 @@ func (s *Service) validateVoucher(dto *model.CreateVoucherDTO) error {
 		return errors.New("凭证至少需要一个分录")
 	}
 
-	// 验证凭证明细
-	totalDebit := 0.0
-	totalCredit := 0.0
-	for _, entry := range dto.Entries {
-		if entry.AccountCode == "" {
-			return errors.New("科目代码不能为空")
+	// 如果系统已开账，需要验证借贷平衡
+	if systemOpened {
+		// 验证凭证明细
+		totalDebit := 0.0
+		totalCredit := 0.0
+		for _, entry := range dto.Entries {
+			if entry.AccountCode == "" {
+				return errors.New("科目代码不能为空")
+			}
+
+			if entry.DebitAmount < 0 || entry.CreditAmount < 0 {
+				return errors.New("借贷金额不能为负数")
+			}
+
+			if entry.DebitAmount > 0 && entry.CreditAmount > 0 {
+				return errors.New("同一分录不能同时有借贷金额")
+			}
+
+			if entry.DebitAmount == 0 && entry.CreditAmount == 0 {
+				return errors.New("借贷金额不能同时为零")
+			}
+
+			totalDebit += entry.DebitAmount
+			totalCredit += entry.CreditAmount
 		}
 
-		if entry.DebitAmount < 0 || entry.CreditAmount < 0 {
-			return errors.New("借贷金额不能为负数")
+		// 检查借贷平衡
+		if totalDebit != totalCredit {
+			return errors.New("借贷金额不平衡")
 		}
+	} else {
+		// 系统未开账时，允许单方面调整
+		for _, entry := range dto.Entries {
+			if entry.AccountCode == "" {
+				return errors.New("科目代码不能为空")
+			}
 
-		if entry.DebitAmount > 0 && entry.CreditAmount > 0 {
-			return errors.New("同一分录不能同时有借贷金额")
+			if entry.DebitAmount < 0 || entry.CreditAmount < 0 {
+				return errors.New("金额不能为负数")
+			}
+
+			if entry.DebitAmount > 0 && entry.CreditAmount > 0 {
+				return errors.New("同一分录不能同时有借贷金额")
+			}
 		}
-
-		if entry.DebitAmount == 0 && entry.CreditAmount == 0 {
-			return errors.New("借贷金额不能同时为零")
-		}
-
-		totalDebit += entry.DebitAmount
-		totalCredit += entry.CreditAmount
-	}
-
-	// 检查借贷平衡
-	if totalDebit != totalCredit {
-		return errors.New("借贷金额不平衡")
 	}
 
 	return nil
@@ -400,6 +430,25 @@ func (s *Service) GetCustomer(id int64) (*model.Customer, error) {
 
 func (s *Service) ListCustomers() ([]*model.Customer, error) {
 	return s.repo.ListCustomers()
+}
+
+// System operations
+func (s *Service) IsSystemOpened() (bool, error) {
+	return s.repo.IsSystemOpened()
+}
+
+func (s *Service) OpenSystem() error {
+	// 检查系统是否已经开账
+	isOpened, err := s.repo.IsSystemOpened()
+	if err != nil {
+		return err
+	}
+
+	if isOpened {
+		return errors.New("系统已经开账，不能重复开账")
+	}
+
+	return s.repo.OpenSystem()
 }
 
 // PurchaseOrder operations

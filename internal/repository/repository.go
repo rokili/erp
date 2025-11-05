@@ -225,6 +225,55 @@ func (r *Repository) ListCustomers() ([]*model.Customer, error) {
 	return customers, nil
 }
 
+// SystemConfig operations
+func (r *Repository) GetSystemConfig(key string) (*model.SystemConfig, error) {
+	config := &model.SystemConfig{}
+	query := `SELECT id, config_key, config_value, description, created_at, updated_at 
+	          FROM system_config WHERE config_key = $1`
+	err := r.db.Get(config, query, key)
+	if err != nil {
+		return nil, err
+	}
+	return config, nil
+}
+
+func (r *Repository) SetSystemConfig(key, value, description string) error {
+	// 检查配置项是否存在
+	var count int
+	query := `SELECT COUNT(*) FROM system_config WHERE config_key = $1`
+	err := r.db.Get(&count, query, key)
+	if err != nil {
+		return err
+	}
+
+	if count > 0 {
+		// 更新现有配置
+		query = `UPDATE system_config SET config_value = $1, description = $2, updated_at = $3 WHERE config_key = $4`
+		_, err = r.db.Exec(query, value, description, time.Now(), key)
+	} else {
+		// 插入新配置
+		query = `INSERT INTO system_config (config_key, config_value, description, created_at, updated_at) 
+		         VALUES ($1, $2, $3, $4, $5)`
+		_, err = r.db.Exec(query, key, value, description, time.Now(), time.Now())
+	}
+
+	return err
+}
+
+func (r *Repository) IsSystemOpened() (bool, error) {
+	config, err := r.GetSystemConfig("system_opened")
+	if err != nil {
+		// 如果配置项不存在，返回默认值 false（未开账）
+		return false, nil
+	}
+
+	return config.ConfigValue == "true", nil
+}
+
+func (r *Repository) OpenSystem() error {
+	return r.SetSystemConfig("system_opened", "true", "系统已开账")
+}
+
 // PurchaseOrder operations
 func (r *Repository) CreatePurchaseOrder(order *model.PurchaseOrder) error {
 	tx, err := r.db.Beginx()

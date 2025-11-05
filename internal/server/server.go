@@ -67,6 +67,13 @@ func registerRoutes(router *gin.Engine, handler *handler.Handler) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
+	// 系统管理路由
+	system := router.Group("/api/system")
+	{
+		system.GET("/status", handler.GetSystemStatus)
+		system.POST("/open", handler.OpenSystem)
+	}
+
 	// 财务相关路由
 	finance := router.Group("/api/finance")
 	{

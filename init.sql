@@ -191,6 +191,16 @@ CREATE TABLE inventory_fifo_layer (
     warehouse VARCHAR(64) DEFAULT 'MAIN'
 );
 
+-- Create system_config table (用于存储系统配置，如开账状态)
+CREATE TABLE system_config (
+    id SERIAL PRIMARY KEY,
+    config_key VARCHAR(64) UNIQUE NOT NULL,
+    config_value TEXT,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Create indexes
 CREATE INDEX idx_voucher_date ON finance_voucher(voucher_date);
 CREATE INDEX idx_voucher_entry_account ON finance_voucher_entry(account_code);
@@ -235,3 +245,7 @@ INSERT INTO finance_account (code, name, account_type, balance_direction, is_lea
 ('6603', '财务费用', 'EXPENSE', 'DEBIT', true),
 ('6701', '资产减值损失', 'EXPENSE', 'DEBIT', true),
 ('6711', '营业外支出', 'EXPENSE', 'DEBIT', true);
+
+-- Insert system configuration
+INSERT INTO system_config (config_key, config_value, description) VALUES
+('system_opened', 'false', '系统是否已开账，false表示未开账，true表示已开账');

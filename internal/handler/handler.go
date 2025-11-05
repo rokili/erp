@@ -17,6 +17,34 @@ func New(svc *service.Service) *Handler {
 	return &Handler{service: svc}
 }
 
+// System handlers
+func (h *Handler) GetSystemStatus(c *gin.Context) {
+	isOpened, err := h.service.IsSystemOpened()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"opened": isOpened,
+		"message": func() string {
+			if isOpened {
+				return "系统已开账"
+			}
+			return "系统未开账"
+		}(),
+	})
+}
+
+func (h *Handler) OpenSystem(c *gin.Context) {
+	if err := h.service.OpenSystem(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "系统开账成功"})
+}
+
 // Voucher handlers
 func (h *Handler) CreateVoucher(c *gin.Context) {
 	var dto model.CreateVoucherDTO

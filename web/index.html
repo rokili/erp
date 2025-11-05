@@ -3,199 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERP 系统</title>
+    <title>ERP管理系统</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ERP 系统</h1>
-            <nav>
-                <button id="dashboard-btn">仪表板</button>
-                <button id="accounts-btn">会计科目</button>
-                <button id="vouchers-btn">会计凭证</button>
-                <button id="products-btn">商品管理</button>
-                <button id="categories-btn">商品分类</button>
-                <button id="suppliers-btn">供应商管理</button>
-                <button id="customers-btn">客户管理</button>
-                <button id="inventory-btn">库存管理</button>
-                <button id="purchase-orders-btn">采购订单</button>
-                <button id="sales-orders-btn">销售订单</button>
-            </nav>
+            <h1>ERP管理系统</h1>
+            <div class="system-status">
+                <span id="systemStatus">系统状态: 未开账</span>
+                <button id="openSystemBtn" class="btn btn-primary">开账</button>
+            </div>
         </header>
 
+        <nav>
+            <ul>
+                <li><a href="#finance" class="nav-link active" data-tab="finance">财务管理</a></li>
+                <li><a href="#inventory" class="nav-link" data-tab="inventory">库存管理</a></li>
+                <li><a href="#purchase" class="nav-link" data-tab="purchase">采购管理</a></li>
+                <li><a href="#sales" class="nav-link" data-tab="sales">销售管理</a></li>
+                <li><a href="#settings" class="nav-link" data-tab="settings">系统设置</a></li>
+            </ul>
+        </nav>
+
         <main>
-            <section id="dashboard-section" class="section">
-                <h2>系统仪表板</h2>
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <h3>商品总数</h3>
-                        <p id="total-products">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>供应商数量</h3>
-                        <p id="total-suppliers">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>客户数量</h3>
-                        <p id="total-customers">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>库存总值</h3>
-                        <p id="total-inventory-value">¥0.00</p>
-                    </div>
+            <!-- 财务管理模块 -->
+            <section id="finance" class="tab-content active">
+                <h2>财务管理</h2>
+                
+                <div class="card">
+                    <h3>凭证录入</h3>
+                    <form id="voucherForm">
+                        <div class="form-group">
+                            <label for="voucherDate">凭证日期:</label>
+                            <input type="date" id="voucherDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="voucherDescription">摘要:</label>
+                            <input type="text" id="voucherDescription" placeholder="请输入摘要">
+                        </div>
+                        
+                        <h4>分录明细</h4>
+                        <div id="entriesContainer">
+                            <div class="entry-row">
+                                <input type="text" class="account-code" placeholder="科目代码" required>
+                                <input type="text" class="account-name" placeholder="科目名称" required>
+                                <input type="number" class="debit-amount" placeholder="借方金额" step="0.01">
+                                <input type="number" class="credit-amount" placeholder="贷方金额" step="0.01">
+                                <button type="button" class="btn btn-danger remove-entry">删除</button>
+                            </div>
+                        </div>
+                        <button type="button" id="addEntryBtn" class="btn btn-secondary">添加分录</button>
+                        
+                        <button type="submit" class="btn btn-primary">保存凭证</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>科目管理</h3>
+                    <form id="accountForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="accountCode">科目代码:</label>
+                                <input type="text" id="accountCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountName">科目名称:</label>
+                                <input type="text" id="accountName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="accountType">科目类型:</label>
+                                <select id="accountType" required>
+                                    <option value="">请选择</option>
+                                    <option value="ASSET">资产</option>
+                                    <option value="LIABILITY">负债</option>
+                                    <option value="EQUITY">权益</option>
+                                    <option value="INCOME">收入</option>
+                                    <option value="EXPENSE">费用</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="balanceDirection">余额方向:</label>
+                                <select id="balanceDirection" required>
+                                    <option value="">请选择</option>
+                                    <option value="DEBIT">借方</option>
+                                    <option value="CREDIT">贷方</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentAccount">上级科目:</label>
+                                <input type="text" id="parentAccount" placeholder="可选">
+                            </div>
+                            <div class="form-group">
+                                <label for="isLeaf">
+                                    <input type="checkbox" id="isLeaf"> 末级科目
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存科目</button>
+                    </form>
                 </div>
             </section>
 
-            <section id="accounts-section" class="section" style="display:none;">
-                <h2>会计科目管理</h2>
-                <form id="account-form">
-                    <input type="text" id="account-code" placeholder="科目代码" required>
-                    <input type="text" id="account-name" placeholder="科目名称" required>
-                    <select id="account-type">
-                        <option value="ASSET">资产</option>
-                        <option value="LIABILITY">负债</option>
-                        <option value="EQUITY">权益</option>
-                        <option value="INCOME">收入</option>
-                        <option value="EXPENSE">费用</option>
-                    </select>
-                    <button type="submit">创建科目</button>
-                </form>
-                <div id="accounts-list"></div>
-            </section>
-
-            <section id="vouchers-section" class="section" style="display:none;">
-                <h2>会计凭证管理</h2>
-                <form id="voucher-form">
-                    <input type="date" id="voucher-date" required>
-                    <input type="text" id="voucher-description" placeholder="凭证描述" required>
-                    <div id="entries-container">
-                        <div class="entry">
-                            <input type="text" class="entry-account" placeholder="科目代码" required>
-                            <input type="number" class="entry-debit" placeholder="借方金额" step="0.01">
-                            <input type="number" class="entry-credit" placeholder="贷方金额" step="0.01">
-                        </div>
-                    </div>
-                    <button type="button" id="add-entry">添加分录</button>
-                    <button type="submit">创建凭证</button>
-                </form>
-                <div id="vouchers-list"></div>
-            </section>
-
-            <section id="products-section" class="section" style="display:none;">
-                <h2>商品管理</h2>
-                <form id="product-form">
-                    <input type="text" id="product-code" placeholder="商品代码" required>
-                    <input type="text" id="product-name" placeholder="商品名称" required>
-                    <select id="product-category">
-                        <option value="">选择分类</option>
-                    </select>
-                    <input type="text" id="product-unit" placeholder="单位" required>
-                    <input type="text" id="product-spec" placeholder="规格">
-                    <button type="submit">创建商品</button>
-                </form>
-                <div id="products-list"></div>
-            </section>
-
-            <section id="categories-section" class="section" style="display:none;">
-                <h2>商品分类管理</h2>
-                <form id="category-form">
-                    <input type="text" id="category-code" placeholder="分类代码" required>
-                    <input type="text" id="category-name" placeholder="分类名称" required>
-                    <select id="category-parent">
-                        <option value="">无上级分类</option>
-                    </select>
-                    <textarea id="category-desc" placeholder="分类描述"></textarea>
-                    <button type="submit">创建分类</button>
-                </form>
-                <div id="categories-list"></div>
-            </section>
-
-            <section id="suppliers-section" class="section" style="display:none;">
-                <h2>供应商管理</h2>
-                <form id="supplier-form">
-                    <input type="text" id="supplier-code" placeholder="供应商代码" required>
-                    <input type="text" id="supplier-name" placeholder="供应商名称" required>
-                    <input type="text" id="supplier-contact" placeholder="联系人">
-                    <input type="text" id="supplier-phone" placeholder="电话">
-                    <input type="email" id="supplier-email" placeholder="邮箱">
-                    <textarea id="supplier-address" placeholder="地址"></textarea>
-                    <button type="submit">创建供应商</button>
-                </form>
-                <div id="suppliers-list"></div>
-            </section>
-
-            <section id="customers-section" class="section" style="display:none;">
-                <h2>客户管理</h2>
-                <form id="customer-form">
-                    <input type="text" id="customer-code" placeholder="客户代码" required>
-                    <input type="text" id="customer-name" placeholder="客户名称" required>
-                    <input type="text" id="customer-contact" placeholder="联系人">
-                    <input type="text" id="customer-phone" placeholder="电话">
-                    <input type="email" id="customer-email" placeholder="邮箱">
-                    <textarea id="customer-address" placeholder="地址"></textarea>
-                    <button type="submit">创建客户</button>
-                </form>
-                <div id="customers-list"></div>
-            </section>
-
-            <section id="inventory-section" class="section" style="display:none;">
+            <!-- 库存管理模块 -->
+            <section id="inventory" class="tab-content">
                 <h2>库存管理</h2>
-                <div class="inventory-controls">
-                    <input type="text" id="inventory-search" placeholder="搜索商品">
-                    <select id="inventory-category-filter">
-                        <option value="">所有分类</option>
-                    </select>
+                
+                <div class="card">
+                    <h3>商品分类</h3>
+                    <form id="categoryForm">
+                        <div class="form-group">
+                            <label for="categoryCode">分类代码:</label>
+                            <input type="text" id="categoryCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryName">分类名称:</label>
+                            <input type="text" id="categoryName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryParent">上级分类:</label>
+                            <select id="categoryParent">
+                                <option value="">无上级分类</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryDescription">分类描述:</label>
+                            <textarea id="categoryDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存分类</button>
+                    </form>
                 </div>
-                <div id="inventory-list"></div>
+
+                <div class="card">
+                    <h3>商品管理</h3>
+                    <form id="productForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productCode">商品代码:</label>
+                                <input type="text" id="productCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productName">商品名称:</label>
+                                <input type="text" id="productName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productCategory">商品分类:</label>
+                                <select id="productCategory">
+                                    <option value="">请选择分类</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productUnit">单位:</label>
+                                <input type="text" id="productUnit" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productSpec">规格型号:</label>
+                            <input type="text" id="productSpec">
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">商品描述:</label>
+                            <textarea id="productDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存商品</button>
+                    </form>
+                </div>
             </section>
 
-            <section id="purchase-orders-section" class="section" style="display:none;">
-                <h2>采购订单管理</h2>
-                <form id="purchase-order-form">
-                    <select id="po-supplier" required>
-                        <option value="">选择供应商</option>
-                    </select>
-                    <input type="date" id="po-date" required>
-                    <input type="date" id="po-delivery-date" required>
-                    <div id="po-items-container">
-                        <div class="po-item">
-                            <select class="item-product" required>
-                                <option value="">选择商品</option>
-                            </select>
-                            <input type="number" class="item-quantity" placeholder="数量" required>
-                            <input type="number" class="item-price" placeholder="单价" step="0.01" required>
+            <!-- 采购管理模块 -->
+            <section id="purchase" class="tab-content">
+                <h2>采购管理</h2>
+                
+                <div class="card">
+                    <h3>供应商管理</h3>
+                    <form id="supplierForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="supplierCode">供应商代码:</label>
+                                <input type="text" id="supplierCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierName">供应商名称:</label>
+                                <input type="text" id="supplierName" required>
+                            </div>
                         </div>
-                    </div>
-                    <button type="button" id="add-po-item">添加商品</button>
-                    <button type="submit">创建采购订单</button>
-                </form>
-                <div id="purchase-orders-list"></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="supplierContact">联系人:</label>
+                                <input type="text" id="supplierContact">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierPhone">联系电话:</label>
+                                <input type="text" id="supplierPhone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierEmail">邮箱:</label>
+                            <input type="email" id="supplierEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierAddress">地址:</label>
+                            <textarea id="supplierAddress" rows="2"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="supplierTax">税号:</label>
+                                <input type="text" id="supplierTax">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierBank">开户银行:</label>
+                                <input type="text" id="supplierBank">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierBankAccount">银行账号:</label>
+                            <input type="text" id="supplierBankAccount">
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存供应商</button>
+                    </form>
+                </div>
             </section>
 
-            <section id="sales-orders-section" class="section" style="display:none;">
-                <h2>销售订单管理</h2>
-                <form id="sales-order-form">
-                    <select id="so-customer" required>
-                        <option value="">选择客户</option>
-                    </select>
-                    <input type="date" id="so-date" required>
-                    <input type="date" id="so-delivery-date" required>
-                    <div id="so-items-container">
-                        <div class="so-item">
-                            <select class="item-product" required>
-                                <option value="">选择商品</option>
-                            </select>
-                            <input type="number" class="item-quantity" placeholder="数量" required>
-                            <input type="number" class="item-price" placeholder="单价" step="0.01" required>
+            <!-- 销售管理模块 -->
+            <section id="sales" class="tab-content">
+                <h2>销售管理</h2>
+                
+                <div class="card">
+                    <h3>客户管理</h3>
+                    <form id="customerForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerCode">客户代码:</label>
+                                <input type="text" id="customerCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerName">客户名称:</label>
+                                <input type="text" id="customerName" required>
+                            </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerContact">联系人:</label>
+                                <input type="text" id="customerContact">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerPhone">联系电话:</label>
+                                <input type="text" id="customerPhone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">邮箱:</label>
+                            <input type="email" id="customerEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">地址:</label>
+                            <textarea id="customerAddress" rows="2"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerTax">税号:</label>
+                                <input type="text" id="customerTax">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerBank">开户银行:</label>
+                                <input type="text" id="customerBank">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerBankAccount">银行账号:</label>
+                            <input type="text" id="customerBankAccount">
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存客户</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 系统设置模块 -->
+            <section id="settings" class="tab-content">
+                <h2>系统设置</h2>
+                
+                <div class="card">
+                    <h3>系统信息</h3>
+                    <div class="system-info">
+                        <p><strong>系统状态:</strong> <span id="settingsSystemStatus">未开账</span></p>
+                        <p><strong>开账日期:</strong> <span id="openingDate">-</span></p>
+                        <p><strong>当前用户:</strong> Administrator</p>
                     </div>
-                    <button type="button" id="add-so-item">添加商品</button>
-                    <button type="submit">创建销售订单</button>
-                </form>
-                <div id="sales-orders-list"></div>
+                    
+                    <div class="form-group">
+                        <button id="settingsOpenSystemBtn" class="btn btn-primary">开账</button>
+                        <button id="resetSystemBtn" class="btn btn-warning">重置系统</button>
+                    </div>
+                </div>
             </section>
         </main>
+
+        <footer>
+            <p>&copy; 2025 ERP管理系统. 保留所有权利.</p>
+        </footer>
     </div>
 
     <script src="app.js"></script>

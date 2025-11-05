@@ -273,3 +273,20 @@ type CreateSalesOrderDTO struct {
 	Description  string           `json:"description"`
 	Items        []SalesOrderItem `json:"items"`
 }
+
+// SystemConfig represents system configuration
+type SystemConfig struct {
+	ID          int64     `db:"id" json:"id"`
+	ConfigKey   string    `db:"config_key" json:"config_key"`
+	ConfigValue string    `db:"config_value" json:"config_value"`
+	Description string    `db:"description" json:"description"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
+}
+
+// CreateSystemConfigDTO represents the data transfer object for creating system configuration
+type CreateSystemConfigDTO struct {
+	ConfigKey   string `json:"config_key"`
+	ConfigValue string `json:"config_value"`
+	Description string `json:"description"`
+}
