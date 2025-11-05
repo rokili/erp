@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 3px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ERP系统测试界面</h1>
+        <div class="alert alert-info">
+            <h4>新界面已上线</h4>
+            <p>我们为ERP系统设计了全新的现代化界面，提供更好的用户体验。</p>
+            <a href="erp.html" class="btn btn-primary">访问新ERP界面</a>
+        </div>
+        
+        <!-- 系统管理 -->
+        <div class="section">
+            <h2>系统管理</h2>
+            <button onclick="getSystemStatus()">获取系统状态</button>
+            <button onclick="openSystem()">系统开账</button>
+            <div id="system-result" class="result"></div>
+        </div>
+        
+        <!-- 财务管理 -->
+        <div class="section">
+            <h2>财务管理</h2>
+            <button onclick="listAccounts()">获取会计科目列表</button>
+            <button onclick="listVouchers()">获取凭证列表</button>
+            <div id="finance-result" class="result"></div>
+        </div>
+        
+        <!-- 商品管理 -->
+        <div class="section">
+            <h2>商品管理</h2>
+            <button onclick="listCategories()">获取商品分类列表</button>
+            <button onclick="listProducts()">获取商品列表</button>
+            <div id="product-result" class="result"></div>
+        </div>
+        
+        <!-- 采购管理 -->
+        <div class="section">
+            <h2>采购管理</h2>
+            <button onclick="listSuppliers()">获取供应商列表</button>
+            <button onclick="listPurchaseOrders()">获取采购订单列表</button>
+            <div id="purchase-result" class="result"></div>
+        </div>
+        
+        <!-- 销售管理 -->
+        <div class="section">
+            <h2>销售管理</h2>
+            <button onclick="listCustomers()">获取客户列表</button>
+            <button onclick="listSalesOrders()">获取销售订单列表</button>
+            <div id="sales-result" class="result"></div>
+        </div>
+        
+        <!-- 用户权限管理 -->
+        <div class="section">
+            <h2>用户权限管理</h2>
+            <button onclick="listUsers()">获取用户列表</button>
+            <button onclick="listRoles()">获取角色列表</button>
+            <div id="user-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const baseURL = 'http://localhost:8080/api';
+        
+        // 系统管理
+        function getSystemStatus() {
+            fetch(`${baseURL}/system/status`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('system-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('system-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function openSystem() {
+            fetch(`${baseURL}/system/open`, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('system-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('system-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        // 财务管理
+        function listAccounts() {
+            fetch(`${baseURL}/finance/accounts`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('finance-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('finance-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function listVouchers() {
+            fetch(`${baseURL}/finance/vouchers`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('finance-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('finance-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        // 商品管理
+        function listCategories() {
+            fetch(`${baseURL}/categories`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('product-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('product-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function listProducts() {
+            fetch(`${baseURL}/products`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('product-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('product-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        // 采购管理
+        function listSuppliers() {
+            fetch(`${baseURL}/purchase/suppliers`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('purchase-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('purchase-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function listPurchaseOrders() {
+            fetch(`${baseURL}/purchase/orders`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('purchase-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('purchase-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        // 销售管理
+        function listCustomers() {
+            fetch(`${baseURL}/sales/customers`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('sales-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('sales-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function listSalesOrders() {
+            fetch(`${baseURL}/sales/orders`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('sales-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('sales-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        // 用户权限管理
+        function listUsers() {
+            fetch(`${baseURL}/users`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('user-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('user-result').innerText = 'Error: ' + error;
+                });
+        }
+        
+        function listRoles() {
+            fetch(`${baseURL}/roles`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('user-result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('user-result').innerText = 'Error: ' + error;
+                });
+        }
+    </script>
+</body>
+</html>

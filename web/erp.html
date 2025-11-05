@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --offcanvas-width: 300px;
+            --topNavbarHeight: 56px;
+            --transition-collapse: ease 0.5s;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color), #1a2530);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            width: 250px; /* 固定宽度 */
+            z-index: 1000;
+        }
+        
+        .offcanvas {
+            background: linear-gradient(180deg, var(--primary-color), #1a2530);
+        }
+        
+        /* 在中等屏幕尺寸下调整侧边栏宽度 */
+        @media (max-width: 991.98px) and (min-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 220px; /* 200px侧边栏宽度 + 20px间距 */
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+            
+            .sidebar .nav-link {
+                padding: 0.5rem 1rem;
+            }
+            
+            .user-info {
+                padding: 0.5rem;
+            }
+            
+            .user-info img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .user-info h6 {
+                font-size: 0.9rem;
+            }
+            
+            .user-info small {
+                font-size: 0.8rem;
+            }
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.375rem;
+            margin: 0.25rem 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        /* sidebar width */
+        .side-bar {
+            width: var(--offcanvas-width);
+        }
+        
+        /* 桌面端侧边栏 */
+        .sidebar {
+            width: 250px;
+            z-index: 1000;
+            padding-top: var(--topNavbarHeight);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.375rem;
+            margin: 0.25rem 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* 在小屏幕下隐藏桌面端侧边栏 */
+        @media (max-width: 991.98px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        /* sidebar links */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-link .right-icon {
+            display: inline-flex;
+            transition: all ease 0.5s;
+        }
+        
+        /* collapse menu */
+        .collapsing {
+            transition: var(--transition-collapse);
+        }
+        
+        /* chevron rotate on expand */
+        .sidebar-link[aria-expanded="true"] .right-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* sidebar visibility and navbar height */
+        @media (min-width: 990px) {
+            body {
+                overflow: auto !important;
+            }
+            
+            main {
+                margin-left: var(--offcanvas-width);
+            }
+            
+            .side-bar {
+                transform: none;
+                visibility: visible !important;
+                top: var(--topNavbarHeight);
+                height: calc(100% - var(--topNavbarHeight));
+            }
+        }
+        
+        /* table styling */
+        .card,
+        .card-chart,
+        .card-table {
+            border-radius: 10px;
+        }
+        
+        .card-chart {
+            background: rgb(240, 240, 240);
+        }
+        
+        .chart {
+            background: rgb(230, 230, 230);
+            border-radius: 5px;
+        }
+        
+        .card-table {
+            background: rgb(240, 240, 240);
+        }
+        
+        /* striped table effect */
+        tr:nth-child(even) {
+            background-color: rgb(250, 250, 250);
+        }
+        
+        /* checkbox */
+        input[type=checkbox] {
+            height: 0px;
+            width: 0px;
+            visibility: hidden;
+        }
+        
+        label {
+            cursor: pointer;
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 767.98px) {
+            .page-header {
+                padding: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 767.98px) {
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        @media (max-width: 767.98px) {
+            .btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+        }
+        
+        .table th {
+            font-weight: 600;
+        }
+        
+        @media (max-width: 767.98px) {
+            .table-responsive {
+                font-size: 0.8rem;
+            }
+            
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        .action-buttons .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .module-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 767.98px) {
+            .form-control,
+            .form-select {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .mb-3 {
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .modal-body .mb-3 {
+                margin-bottom: 1rem !important;
+            }
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 767.98px) {
+            .modal-dialog {
+                margin: 10px;
+                max-width: calc(100% - 20px);
+            }
+            
+            .modal-content {
+                max-height: calc(100vh - 20px);
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .modal-header,
+            .modal-footer {
+                padding: 0.75rem;
+            }
+        }
+        
+        .user-info {
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <!-- Sidebar Trigger -->
+            <button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand fw-bold me-auto" href="#">ERP管理系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> 管理员
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">个人资料</a></li>
+                            <li><a class="dropdown-item" href="#">设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 桌面端侧边栏 -->
+    <nav class="col-md-3 col-lg-2 d-none d-lg-block sidebar bg-dark text-white position-fixed h-100">
+        <div class="position-sticky pt-3">
+            <div class="user-info text-center mb-4">
+                <img src="https://ui-avatars.com/api/?name=ERP&background=3498db&color=fff" alt="用户头像" class="rounded-circle mb-2">
+                <h6 class="text-white">ERP管理系统</h6>
+                <small class="text-white-50">管理员</small>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-module="dashboard">
+                        <i class="bi bi-speedometer2 module-icon"></i>控制台
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="finance">
+                        <i class="bi bi-currency-dollar module-icon"></i>财务管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="purchase">
+                        <i class="bi bi-cart-plus module-icon"></i>采购管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="sales">
+                        <i class="bi bi-receipt module-icon"></i>销售管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="inventory">
+                        <i class="bi bi-box-seam module-icon"></i>库存管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="system">
+                        <i class="bi bi-gear module-icon"></i>系统管理
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 移动端Offcanvas侧边栏 -->
+    <div class="offcanvas offcanvas-start bg-dark text-white side-bar" data-bs-scroll="true" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabel">ERP管理系统</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <nav class="navbar-dark">
+                <ul class="navbar-nav">
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">核心功能</div>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3 active" data-module="dashboard">
+                            <span class="me-2">
+                                <i class="bi bi-speedometer2"></i>
+                            </span>
+                            <span class="fw-bold">控制台</span>
+                        </a>
+                    </li>
+                    <li class="my-4">
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">业务管理</div>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="finance">
+                            <span class="me-2">
+                                <i class="bi bi-currency-dollar"></i>
+                            </span>
+                            <span class="fw-bold">财务管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="purchase">
+                            <span class="me-2">
+                                <i class="bi bi-cart-plus"></i>
+                            </span>
+                            <span class="fw-bold">采购管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="sales">
+                            <span class="me-2">
+                                <i class="bi bi-receipt"></i>
+                            </span>
+                            <span class="fw-bold">销售管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="inventory">
+                            <span class="me-2">
+                                <i class="bi bi-box-seam"></i>
+                            </span>
+                            <span class="fw-bold">库存管理</span>
+                        </a>
+                    </li>
+                    <li class="my-4">
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <div class="text-muted small fw-bold text-uppercase px-3">系统管理</div>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="system">
+                            <span class="me-2">
+                                <i class="bi bi-gear"></i>
+                            </span>
+                            <span class="fw-bold">系统设置</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+            <!-- 主内容区 -->
+            <main class="main-content mt-5 pt-3">
+                <!-- 页面标题 -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom page-header">
+                    <h1 class="h2" id="page-title">控制台</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh-btn">
+                            <i class="bi bi-arrow-repeat"></i>
+                            刷新
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 控制台模块 -->
+                <div class="module" id="dashboard-module">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-primary h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">今日销售</h5>
+                                    <h2>¥12,560</h2>
+                                    <small>+5.2% 比昨天</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-success h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">待处理订单</h5>
+                                    <h2>24</h2>
+                                    <small>采购: 12 销售: 12</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-warning h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">库存预警</h5>
+                                    <h2>8</h2>
+                                    <small>需要补货的商品</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-danger h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">系统状态</h5>
+                                    <h2>未开账</h2>
+                                    <small>点击开账</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    最近销售订单
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>订单号</th>
+                                                    <th>客户</th>
+                                                    <th>金额</th>
+                                                    <th>状态</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>SO20251105001</td>
+                                                    <td>客户A</td>
+                                                    <td>¥5,000</td>
+                                                    <td><span class="badge bg-warning">待审批</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>SO20251105002</td>
+                                                    <td>客户B</td>
+                                                    <td>¥3,200</td>
+                                                    <td><span class="badge bg-success">已发货</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    最近采购订单
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>订单号</th>
+                                                    <th>供应商</th>
+                                                    <th>金额</th>
+                                                    <th>状态</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>PO20251105001</td>
+                                                    <td>供应商A</td>
+                                                    <td>¥8,000</td>
+                                                    <td><span class="badge bg-warning">待审批</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PO20251105002</td>
+                                                    <td>供应商B</td>
+                                                    <td>¥4,500</td>
+                                                    <td><span class="badge bg-success">已收货</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 财务管理模块 -->
+                <div class="module d-none" id="finance-module">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>会计科目管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#accountModal">
+                                <i class="bi bi-plus-lg"></i> 新增科目
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="accounts-table">
+                                    <thead>
+                                        <tr>
+                                            <th>科目编码</th>
+                                            <th>科目名称</th>
+                                            <th>科目类型</th>
+                                            <th>余额方向</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 数据将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 采购管理模块 -->
+                <div class="module d-none" id="purchase-module">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>供应商管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#supplierModal">
+                                <i class="bi bi-plus-lg"></i> 新增供应商
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="suppliers-table">
+                                    <thead>
+                                        <tr>
+                                            <th>编码</th>
+                                            <th>名称</th>
+                                            <th>联系人</th>
+                                            <th>电话</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 数据将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 销售管理模块 -->
+                <div class="module d-none" id="sales-module">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>客户管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal">
+                                <i class="bi bi-plus-lg"></i> 新增客户
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="customers-table">
+                                    <thead>
+                                        <tr>
+                                            <th>编码</th>
+                                            <th>名称</th>
+                                            <th>联系人</th>
+                                            <th>电话</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 数据将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 库存管理模块 -->
+                <div class="module d-none" id="inventory-module">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>商品管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal">
+                                <i class="bi bi-plus-lg"></i> 新增商品
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>编码</th>
+                                            <th>名称</th>
+                                            <th>分类</th>
+                                            <th>单位</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 数据将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统管理模块 -->
+                <div class="module d-none" id="system-module">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    系统状态
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>当前状态:</span>
+                                        <span class="badge bg-warning" id="system-status">未开账</span>
+                                    </div>
+                                    <button class="btn btn-success" id="open-system-btn">
+                                        <i class="bi bi-unlock"></i> 系统开账
+                                    </button>
+                                    <p class="mt-3 text-muted">
+                                        <small>开账后将启用严格的财务平衡检查，所有凭证必须借贷相等。</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    用户管理
+                                </div>
+                                <div class="card-body">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+                                        <i class="bi bi-person-plus"></i> 新增用户
+                                    </button>
+                                    <button class="btn btn-secondary ms-2" id="list-users-btn">
+                                        <i class="bi bi-people"></i> 用户列表
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 会计科目模态框 -->
+    <div class="modal fade" id="accountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增会计科目</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="account-form">
+                        <div class="mb-3">
+                            <label class="form-label">科目编码</label>
+                            <input type="text" class="form-control" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">科目名称</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">科目类型</label>
+                            <select class="form-select" name="account_type" required>
+                                <option value="ASSET">资产</option>
+                                <option value="LIABILITY">负债</option>
+                                <option value="EQUITY">所有者权益</option>
+                                <option value="INCOME">收入</option>
+                                <option value="EXPENSE">费用</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">余额方向</label>
+                            <select class="form-select" name="balance_direction" required>
+                                <option value="DEBIT">借方</option>
+                                <option value="CREDIT">贷方</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-account-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 供应商模态框 -->
+    <div class="modal fade" id="supplierModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增供应商</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="supplier-form">
+                        <div class="mb-3">
+                            <label class="form-label">供应商编码</label>
+                            <input type="text" class="form-control" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">供应商名称</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">联系人</label>
+                            <input type="text" class="form-control" name="contact_person">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">电话</label>
+                            <input type="text" class="form-control" name="phone">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-supplier-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 客户模态框 -->
+    <div class="modal fade" id="customerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增客户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="customer-form">
+                        <div class="mb-3">
+                            <label class="form-label">客户编码</label>
+                            <input type="text" class="form-control" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">客户名称</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">联系人</label>
+                            <input type="text" class="form-control" name="contact_person">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">电话</label>
+                            <input type="text" class="form-control" name="phone">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-customer-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品模态框 -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增商品</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="product-form">
+                        <div class="mb-3">
+                            <label class="form-label">商品编码</label>
+                            <input type="text" class="form-control" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">商品名称</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">分类</label>
+                            <select class="form-select" name="category_id">
+                                <option value="1">电子产品</option>
+                                <option value="2">办公用品</option>
+                                <option value="3">日用品</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">单位</label>
+                            <input type="text" class="form-control" name="unit">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-product-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用户模态框 -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增用户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="user-form">
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">姓名</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">密码</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">邮箱</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-user-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API基础URL
+        const baseURL = 'http://localhost:8080/api';
+        
+        // 当前激活的模块
+        let currentModule = 'dashboard';
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定导航链接事件
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const module = this.getAttribute('data-module');
+                    switchModule(module);
+                });
+            });
+            
+            // 绑定刷新按钮事件
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                loadModuleData(currentModule);
+            });
+            
+            // 绑定保存按钮事件
+            document.getElementById('save-account-btn').addEventListener('click', saveAccount);
+            document.getElementById('save-supplier-btn').addEventListener('click', saveSupplier);
+            document.getElementById('save-customer-btn').addEventListener('click', saveCustomer);
+            document.getElementById('save-product-btn').addEventListener('click', saveProduct);
+            document.getElementById('save-user-btn').addEventListener('click', saveUser);
+            
+            // 绑定系统开账按钮事件
+            document.getElementById('open-system-btn').addEventListener('click', openSystem);
+            
+            // 绑定用户列表按钮事件
+            document.getElementById('list-users-btn').addEventListener('click', listUsers);
+            
+            // 初始化加载控制台数据
+            loadDashboardData();
+        });
+        
+        // 切换模块
+        function switchModule(module) {
+            // 更新导航链接激活状态
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-module="${module}"]`).classList.add('active');
+            
+            // 更新页面标题
+            const titles = {
+                'dashboard': '控制台',
+                'finance': '财务管理',
+                'purchase': '采购管理',
+                'sales': '销售管理',
+                'inventory': '库存管理',
+                'system': '系统管理'
+            };
+            document.getElementById('page-title').textContent = titles[module];
+            
+            // 显示对应的模块
+            document.querySelectorAll('.module').forEach(m => {
+                m.classList.add('d-none');
+            });
+            document.getElementById(`${module}-module`).classList.remove('d-none');
+            
+            // 更新当前模块
+            currentModule = module;
+            
+            // 加载模块数据
+            loadModuleData(module);
+        }
+        
+        // 加载模块数据
+        function loadModuleData(module) {
+            switch(module) {
+                case 'finance':
+                    loadAccounts();
+                    break;
+                case 'purchase':
+                    loadSuppliers();
+                    break;
+                case 'sales':
+                    loadCustomers();
+                    break;
+                case 'inventory':
+                    loadProducts();
+                    break;
+                case 'system':
+                    loadSystemStatus();
+                    break;
+            }
+        }
+        
+        // 加载控制台数据
+        function loadDashboardData() {
+            // 这里可以加载实际的控制台数据
+            console.log('加载控制台数据');
+        }
+        
+        // 加载会计科目
+        function loadAccounts() {
+            fetch(`${baseURL}/finance/accounts`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#accounts-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    if (data.accounts && data.accounts.length > 0) {
+                        data.accounts.forEach(account => {
+                            const row = tbody.insertRow();
+                            row.innerHTML = `
+                                <td>${account.code}</td>
+                                <td>${account.name}</td>
+                                <td>${getAccountTypeText(account.account_type)}</td>
+                                <td>${getBalanceDirectionText(account.balance_direction)}</td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                </td>
+                            `;
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">暂无数据</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('加载会计科目失败:', error);
+                    alert('加载会计科目失败');
+                });
+        }
+        
+        // 获取科目类型文本
+        function getAccountTypeText(type) {
+            const types = {
+                'ASSET': '资产',
+                'LIABILITY': '负债',
+                'EQUITY': '所有者权益',
+                'INCOME': '收入',
+                'EXPENSE': '费用'
+            };
+            return types[type] || type;
+        }
+        
+        // 获取余额方向文本
+        function getBalanceDirectionText(direction) {
+            return direction === 'DEBIT' ? '借方' : '贷方';
+        }
+        
+        // 保存会计科目
+        function saveAccount() {
+            const form = document.getElementById('account-form');
+            const formData = new FormData(form);
+            const account = Object.fromEntries(formData);
+            
+            fetch(`${baseURL}/finance/accounts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(account)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('会计科目保存成功');
+                bootstrap.Modal.getInstance(document.getElementById('accountModal')).hide();
+                loadAccounts();
+            })
+            .catch(error => {
+                console.error('保存会计科目失败:', error);
+                alert('保存会计科目失败');
+            });
+        }
+        
+        // 加载供应商
+        function loadSuppliers() {
+            fetch(`${baseURL}/purchase/suppliers`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#suppliers-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const suppliers = [
+                        {code: 'SUP001', name: '供应商A', contact_person: '张三', phone: '13800138000'},
+                        {code: 'SUP002', name: '供应商B', contact_person: '李四', phone: '13900139000'}
+                    ];
+                    
+                    suppliers.forEach(supplier => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${supplier.code}</td>
+                            <td>${supplier.name}</td>
+                            <td>${supplier.contact_person}</td>
+                            <td>${supplier.phone}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载供应商失败:', error);
+                    alert('加载供应商失败');
+                });
+        }
+        
+        // 保存供应商
+        function saveSupplier() {
+            const form = document.getElementById('supplier-form');
+            const formData = new FormData(form);
+            const supplier = Object.fromEntries(formData);
+            
+            // 这里应该调用实际的API
+            alert('供应商保存成功');
+            bootstrap.Modal.getInstance(document.getElementById('supplierModal')).hide();
+            loadSuppliers();
+        }
+        
+        // 加载客户
+        function loadCustomers() {
+            fetch(`${baseURL}/sales/customers`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#customers-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const customers = [
+                        {code: 'CUS001', name: '客户A', contact_person: '王五', phone: '13700137000'},
+                        {code: 'CUS002', name: '客户B', contact_person: '赵六', phone: '13600136000'}
+                    ];
+                    
+                    customers.forEach(customer => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${customer.code}</td>
+                            <td>${customer.name}</td>
+                            <td>${customer.contact_person}</td>
+                            <td>${customer.phone}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载客户失败:', error);
+                    alert('加载客户失败');
+                });
+        }
+        
+        // 保存客户
+        function saveCustomer() {
+            const form = document.getElementById('customer-form');
+            const formData = new FormData(form);
+            const customer = Object.fromEntries(formData);
+            
+            // 这里应该调用实际的API
+            alert('客户保存成功');
+            bootstrap.Modal.getInstance(document.getElementById('customerModal')).hide();
+            loadCustomers();
+        }
+        
+        // 加载商品
+        function loadProducts() {
+            fetch(`${baseURL}/products`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#products-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const products = [
+                        {code: 'PRD001', name: '智能手机', category: '电子产品', unit: '台'},
+                        {code: 'PRD002', name: '笔记本电脑', category: '电子产品', unit: '台'},
+                        {code: 'PRD003', name: '办公椅', category: '办公用品', unit: '把'}
+                    ];
+                    
+                    products.forEach(product => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${product.code}</td>
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>${product.unit}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载商品失败:', error);
+                    alert('加载商品失败');
+                });
+        }
+        
+        // 保存商品
+        function saveProduct() {
+            const form = document.getElementById('product-form');
+            const formData = new FormData(form);
+            const product = Object.fromEntries(formData);
+            
+            // 这里应该调用实际的API
+            alert('商品保存成功');
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+            loadProducts();
+        }
+        
+        // 加载系统状态
+        function loadSystemStatus() {
+            fetch(`${baseURL}/system/status`)
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('system-status');
+                    statusElement.textContent = data.is_opened ? '已开账' : '未开账';
+                    statusElement.className = data.is_opened ? 'badge bg-success' : 'badge bg-warning';
+                })
+                .catch(error => {
+                    console.error('加载系统状态失败:', error);
+                });
+        }
+        
+        // 系统开账
+        function openSystem() {
+            if (confirm('确定要进行系统开账吗？开账后将启用严格的财务平衡检查。')) {
+                fetch(`${baseURL}/system/open`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('系统开账成功');
+                    loadSystemStatus();
+                })
+                .catch(error => {
+                    console.error('系统开账失败:', error);
+                    alert('系统开账失败');
+                });
+            }
+        }
+        
+        // 保存用户
+        function saveUser() {
+            const form = document.getElementById('user-form');
+            const formData = new FormData(form);
+            const user = Object.fromEntries(formData);
+            
+            // 这里应该调用实际的API
+            alert('用户保存成功');
+            bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+        }
+        
+        // 加载用户列表
+        function listUsers() {
+            fetch(`${baseURL}/users`)
+                .then(response => response.json())
+                .then(data => {
+                    alert('用户列表功能待实现');
+                })
+                .catch(error => {
+                    console.error('加载用户列表失败:', error);
+                    alert('加载用户列表失败');
+                });
+        }
+    </script>
+</body>
+</html>
