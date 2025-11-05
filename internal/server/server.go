@@ -78,6 +78,38 @@ func registerRoutes(router *gin.Engine, handler *handler.Handler) {
 		finance.GET("/accounts", handler.ListAccounts)
 	}
 
+	// 商品分类相关路由
+	categories := router.Group("/api/categories")
+	{
+		categories.POST("", handler.CreateProductCategory)
+		categories.GET("/:id", handler.GetProductCategory)
+		categories.GET("", handler.ListProductCategories)
+	}
+
+	// 商品相关路由
+	products := router.Group("/api/products")
+	{
+		products.POST("", handler.CreateProduct)
+		products.GET("/:id", handler.GetProduct)
+		products.GET("", handler.ListProducts)
+	}
+
+	// 供应商相关路由
+	suppliers := router.Group("/api/suppliers")
+	{
+		suppliers.POST("", handler.CreateSupplier)
+		suppliers.GET("/:id", handler.GetSupplier)
+		suppliers.GET("", handler.ListSuppliers)
+	}
+
+	// 客户相关路由
+	customers := router.Group("/api/customers")
+	{
+		customers.POST("", handler.CreateCustomer)
+		customers.GET("/:id", handler.GetCustomer)
+		customers.GET("", handler.ListCustomers)
+	}
+
 	// 采购相关路由
 	purchase := router.Group("/api/purchase")
 	{

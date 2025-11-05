@@ -106,6 +106,178 @@ func (h *Handler) ListAccounts(c *gin.Context) {
 	c.JSON(http.StatusOK, accounts)
 }
 
+// ProductCategory handlers
+func (h *Handler) CreateProductCategory(c *gin.Context) {
+	var dto model.CreateProductCategoryDTO
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	category, err := h.service.CreateProductCategory(&dto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, category)
+}
+
+func (h *Handler) GetProductCategory(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的分类ID"})
+		return
+	}
+
+	category, err := h.service.GetProductCategory(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "分类不存在"})
+		return
+	}
+
+	c.JSON(http.StatusOK, category)
+}
+
+func (h *Handler) ListProductCategories(c *gin.Context) {
+	categories, err := h.service.ListProductCategories()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, categories)
+}
+
+// Product handlers
+func (h *Handler) CreateProduct(c *gin.Context) {
+	var dto model.CreateProductDTO
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	product, err := h.service.CreateProduct(&dto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, product)
+}
+
+func (h *Handler) GetProduct(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的商品ID"})
+		return
+	}
+
+	product, err := h.service.GetProduct(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "商品不存在"})
+		return
+	}
+
+	c.JSON(http.StatusOK, product)
+}
+
+func (h *Handler) ListProducts(c *gin.Context) {
+	products, err := h.service.ListProducts()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, products)
+}
+
+// Supplier handlers
+func (h *Handler) CreateSupplier(c *gin.Context) {
+	var dto model.CreateSupplierDTO
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	supplier, err := h.service.CreateSupplier(&dto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, supplier)
+}
+
+func (h *Handler) GetSupplier(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的供应商ID"})
+		return
+	}
+
+	supplier, err := h.service.GetSupplier(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "供应商不存在"})
+		return
+	}
+
+	c.JSON(http.StatusOK, supplier)
+}
+
+func (h *Handler) ListSuppliers(c *gin.Context) {
+	suppliers, err := h.service.ListSuppliers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, suppliers)
+}
+
+// Customer handlers
+func (h *Handler) CreateCustomer(c *gin.Context) {
+	var dto model.CreateCustomerDTO
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	customer, err := h.service.CreateCustomer(&dto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, customer)
+}
+
+func (h *Handler) GetCustomer(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的客户ID"})
+		return
+	}
+
+	customer, err := h.service.GetCustomer(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "客户不存在"})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
+}
+
+func (h *Handler) ListCustomers(c *gin.Context) {
+	customers, err := h.service.ListCustomers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, customers)
+}
+
 // PurchaseOrder handlers
 func (h *Handler) CreatePurchaseOrder(c *gin.Context) {
 	var dto model.CreatePurchaseOrderDTO

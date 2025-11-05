@@ -24,6 +24,26 @@ type Repository interface {
 	GetAccount(code string) (*model.Account, error)
 	ListAccounts() ([]*model.Account, error)
 
+	// ProductCategory operations
+	CreateProductCategory(category *model.ProductCategory) error
+	GetProductCategory(id int64) (*model.ProductCategory, error)
+	ListProductCategories() ([]*model.ProductCategory, error)
+
+	// Product operations
+	CreateProduct(product *model.Product) error
+	GetProduct(id int64) (*model.Product, error)
+	ListProducts() ([]*model.Product, error)
+
+	// Supplier operations
+	CreateSupplier(supplier *model.Supplier) error
+	GetSupplier(id int64) (*model.Supplier, error)
+	ListSuppliers() ([]*model.Supplier, error)
+
+	// Customer operations
+	CreateCustomer(customer *model.Customer) error
+	GetCustomer(id int64) (*model.Customer, error)
+	ListCustomers() ([]*model.Customer, error)
+
 	// PurchaseOrder operations
 	CreatePurchaseOrder(order *model.PurchaseOrder) error
 	GetPurchaseOrder(id int64) (*model.PurchaseOrder, error)
@@ -201,6 +221,185 @@ func (s *Service) GetAccount(code string) (*model.Account, error) {
 
 func (s *Service) ListAccounts() ([]*model.Account, error) {
 	return s.repo.ListAccounts()
+}
+
+// ProductCategory operations
+func (s *Service) CreateProductCategory(dto *model.CreateProductCategoryDTO) (*model.ProductCategory, error) {
+	// 验证商品分类数据
+	if err := s.validateProductCategory(dto); err != nil {
+		return nil, err
+	}
+
+	// 构建商品分类对象
+	category := &model.ProductCategory{
+		Code:        dto.Code,
+		Name:        dto.Name,
+		ParentID:    dto.ParentID,
+		Description: dto.Description,
+		CreatedAt:   time.Now(),
+	}
+
+	// 保存到数据库
+	if err := s.repo.CreateProductCategory(category); err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
+
+func (s *Service) validateProductCategory(dto *model.CreateProductCategoryDTO) error {
+	// 检查必需字段
+	if dto.Name == "" {
+		return errors.New("分类名称不能为空")
+	}
+
+	return nil
+}
+
+func (s *Service) GetProductCategory(id int64) (*model.ProductCategory, error) {
+	return s.repo.GetProductCategory(id)
+}
+
+func (s *Service) ListProductCategories() ([]*model.ProductCategory, error) {
+	return s.repo.ListProductCategories()
+}
+
+// Product operations
+func (s *Service) CreateProduct(dto *model.CreateProductDTO) (*model.Product, error) {
+	// 验证商品数据
+	if err := s.validateProduct(dto); err != nil {
+		return nil, err
+	}
+
+	// 构建商品对象
+	product := &model.Product{
+		Code:          dto.Code,
+		Name:          dto.Name,
+		CategoryID:    dto.CategoryID,
+		Unit:          dto.Unit,
+		Specification: dto.Specification,
+		Description:   dto.Description,
+		Status:        "ACTIVE",
+		CreatedAt:     time.Now(),
+	}
+
+	// 保存到数据库
+	if err := s.repo.CreateProduct(product); err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (s *Service) validateProduct(dto *model.CreateProductDTO) error {
+	// 检查必需字段
+	if dto.Name == "" {
+		return errors.New("商品名称不能为空")
+	}
+
+	return nil
+}
+
+func (s *Service) GetProduct(id int64) (*model.Product, error) {
+	return s.repo.GetProduct(id)
+}
+
+func (s *Service) ListProducts() ([]*model.Product, error) {
+	return s.repo.ListProducts()
+}
+
+// Supplier operations
+func (s *Service) CreateSupplier(dto *model.CreateSupplierDTO) (*model.Supplier, error) {
+	// 验证供应商数据
+	if err := s.validateSupplier(dto); err != nil {
+		return nil, err
+	}
+
+	// 构建供应商对象
+	supplier := &model.Supplier{
+		Code:          dto.Code,
+		Name:          dto.Name,
+		ContactPerson: dto.ContactPerson,
+		Phone:         dto.Phone,
+		Email:         dto.Email,
+		Address:       dto.Address,
+		TaxNumber:     dto.TaxNumber,
+		BankName:      dto.BankName,
+		BankAccount:   dto.BankAccount,
+		Status:        "ACTIVE",
+		CreatedAt:     time.Now(),
+	}
+
+	// 保存到数据库
+	if err := s.repo.CreateSupplier(supplier); err != nil {
+		return nil, err
+	}
+
+	return supplier, nil
+}
+
+func (s *Service) validateSupplier(dto *model.CreateSupplierDTO) error {
+	// 检查必需字段
+	if dto.Name == "" {
+		return errors.New("供应商名称不能为空")
+	}
+
+	return nil
+}
+
+func (s *Service) GetSupplier(id int64) (*model.Supplier, error) {
+	return s.repo.GetSupplier(id)
+}
+
+func (s *Service) ListSuppliers() ([]*model.Supplier, error) {
+	return s.repo.ListSuppliers()
+}
+
+// Customer operations
+func (s *Service) CreateCustomer(dto *model.CreateCustomerDTO) (*model.Customer, error) {
+	// 验证客户数据
+	if err := s.validateCustomer(dto); err != nil {
+		return nil, err
+	}
+
+	// 构建客户对象
+	customer := &model.Customer{
+		Code:          dto.Code,
+		Name:          dto.Name,
+		ContactPerson: dto.ContactPerson,
+		Phone:         dto.Phone,
+		Email:         dto.Email,
+		Address:       dto.Address,
+		TaxNumber:     dto.TaxNumber,
+		BankName:      dto.BankName,
+		BankAccount:   dto.BankAccount,
+		Status:        "ACTIVE",
+		CreatedAt:     time.Now(),
+	}
+
+	// 保存到数据库
+	if err := s.repo.CreateCustomer(customer); err != nil {
+		return nil, err
+	}
+
+	return customer, nil
+}
+
+func (s *Service) validateCustomer(dto *model.CreateCustomerDTO) error {
+	// 检查必需字段
+	if dto.Name == "" {
+		return errors.New("客户名称不能为空")
+	}
+
+	return nil
+}
+
+func (s *Service) GetCustomer(id int64) (*model.Customer, error) {
+	return s.repo.GetCustomer(id)
+}
+
+func (s *Service) ListCustomers() ([]*model.Customer, error) {
+	return s.repo.ListCustomers()
 }
 
 // PurchaseOrder operations

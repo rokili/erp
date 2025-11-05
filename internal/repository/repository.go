@@ -109,6 +109,122 @@ func (r *Repository) ListAccounts() ([]*model.Account, error) {
 	return accounts, nil
 }
 
+// ProductCategory operations
+func (r *Repository) CreateProductCategory(category *model.ProductCategory) error {
+	query := `INSERT INTO product_category (code, name, parent_id, description, created_at) 
+	          VALUES ($1, $2, $3, $4, $5) RETURNING id`
+	return r.db.QueryRowx(query, category.Code, category.Name, category.ParentID, category.Description, time.Now()).Scan(&category.ID)
+}
+
+func (r *Repository) GetProductCategory(id int64) (*model.ProductCategory, error) {
+	category := &model.ProductCategory{}
+	query := `SELECT id, code, name, parent_id, description, created_at 
+	          FROM product_category WHERE id = $1`
+	err := r.db.Get(category, query, id)
+	if err != nil {
+		return nil, err
+	}
+	return category, nil
+}
+
+func (r *Repository) ListProductCategories() ([]*model.ProductCategory, error) {
+	categories := []*model.ProductCategory{}
+	query := `SELECT id, code, name, parent_id, description, created_at 
+	          FROM product_category ORDER BY name`
+	err := r.db.Select(&categories, query)
+	if err != nil {
+		return nil, err
+	}
+	return categories, nil
+}
+
+// Product operations
+func (r *Repository) CreateProduct(product *model.Product) error {
+	query := `INSERT INTO product (code, name, category_id, unit, specification, description, status, created_at) 
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
+	return r.db.QueryRowx(query, product.Code, product.Name, product.CategoryID, product.Unit, product.Specification, product.Description, product.Status, time.Now()).Scan(&product.ID)
+}
+
+func (r *Repository) GetProduct(id int64) (*model.Product, error) {
+	product := &model.Product{}
+	query := `SELECT id, code, name, category_id, unit, specification, description, status, created_at 
+	          FROM product WHERE id = $1`
+	err := r.db.Get(product, query, id)
+	if err != nil {
+		return nil, err
+	}
+	return product, nil
+}
+
+func (r *Repository) ListProducts() ([]*model.Product, error) {
+	products := []*model.Product{}
+	query := `SELECT id, code, name, category_id, unit, specification, description, status, created_at 
+	          FROM product ORDER BY name`
+	err := r.db.Select(&products, query)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
+// Supplier operations
+func (r *Repository) CreateSupplier(supplier *model.Supplier) error {
+	query := `INSERT INTO supplier (code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at) 
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`
+	return r.db.QueryRowx(query, supplier.Code, supplier.Name, supplier.ContactPerson, supplier.Phone, supplier.Email, supplier.Address, supplier.TaxNumber, supplier.BankName, supplier.BankAccount, supplier.Status, time.Now()).Scan(&supplier.ID)
+}
+
+func (r *Repository) GetSupplier(id int64) (*model.Supplier, error) {
+	supplier := &model.Supplier{}
+	query := `SELECT id, code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at 
+	          FROM supplier WHERE id = $1`
+	err := r.db.Get(supplier, query, id)
+	if err != nil {
+		return nil, err
+	}
+	return supplier, nil
+}
+
+func (r *Repository) ListSuppliers() ([]*model.Supplier, error) {
+	suppliers := []*model.Supplier{}
+	query := `SELECT id, code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at 
+	          FROM supplier ORDER BY name`
+	err := r.db.Select(&suppliers, query)
+	if err != nil {
+		return nil, err
+	}
+	return suppliers, nil
+}
+
+// Customer operations
+func (r *Repository) CreateCustomer(customer *model.Customer) error {
+	query := `INSERT INTO customer (code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at) 
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`
+	return r.db.QueryRowx(query, customer.Code, customer.Name, customer.ContactPerson, customer.Phone, customer.Email, customer.Address, customer.TaxNumber, customer.BankName, customer.BankAccount, customer.Status, time.Now()).Scan(&customer.ID)
+}
+
+func (r *Repository) GetCustomer(id int64) (*model.Customer, error) {
+	customer := &model.Customer{}
+	query := `SELECT id, code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at 
+	          FROM customer WHERE id = $1`
+	err := r.db.Get(customer, query, id)
+	if err != nil {
+		return nil, err
+	}
+	return customer, nil
+}
+
+func (r *Repository) ListCustomers() ([]*model.Customer, error) {
+	customers := []*model.Customer{}
+	query := `SELECT id, code, name, contact_person, phone, email, address, tax_number, bank_name, bank_account, status, created_at 
+	          FROM customer ORDER BY name`
+	err := r.db.Select(&customers, query)
+	if err != nil {
+		return nil, err
+	}
+	return customers, nil
+}
+
 // PurchaseOrder operations
 func (r *Repository) CreatePurchaseOrder(order *model.PurchaseOrder) error {
 	tx, err := r.db.Beginx()
