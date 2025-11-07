@@ -406,6 +406,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#" data-module="cashier">
+                        <i class="bi bi-wallet2 module-icon"></i>出纳管理
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#" data-module="purchase">
                         <i class="bi bi-cart-plus module-icon"></i>采购管理
                     </a>
@@ -461,6 +466,14 @@
                                 <i class="bi bi-currency-dollar"></i>
                             </span>
                             <span class="fw-bold">财务管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-3" data-module="cashier">
+                            <span class="me-2">
+                                <i class="bi bi-wallet2"></i>
+                            </span>
+                            <span class="fw-bold">出纳管理</span>
                         </a>
                     </li>
                     <li>
@@ -638,20 +651,21 @@
                 <div class="module d-none" id="finance-module">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>会计科目管理</span>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#accountModal">
-                                <i class="bi bi-plus-lg"></i> 新增科目
+                            <span>凭证管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                                <i class="bi bi-plus-lg"></i> 新增凭证
                             </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="accounts-table">
+                                <table class="table table-hover" id="vouchers-table">
                                     <thead>
                                         <tr>
-                                            <th>科目编码</th>
-                                            <th>科目名称</th>
-                                            <th>科目类型</th>
-                                            <th>余额方向</th>
+                                            <th>凭证号</th>
+                                            <th>日期</th>
+                                            <th>摘要</th>
+                                            <th>金额</th>
+                                            <th>状态</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
@@ -664,24 +678,81 @@
                     </div>
                 </div>
 
+                <!-- 出纳管理模块 -->
+                <div class="module d-none" id="cashier-module">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>现金银行</span>
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#cashBankModal">
+                                        <i class="bi bi-plus-lg"></i> 新增记录
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="cash-bank-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>日期</th>
+                                                    <th>摘要</th>
+                                                    <th>收入</th>
+                                                    <th>支出</th>
+                                                    <th>余额</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- 数据将通过JavaScript动态加载 -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <span>账户余额</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>现金:</span>
+                                        <span class="fw-bold">¥15,000.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>银行存款:</span>
+                                        <span class="fw-bold">¥250,000.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>合计:</span>
+                                        <span class="fw-bold">¥265,000.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 采购管理模块 -->
                 <div class="module d-none" id="purchase-module">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>供应商管理</span>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#supplierModal">
-                                <i class="bi bi-plus-lg"></i> 新增供应商
+                            <span>采购订单管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#purchaseOrderModal">
+                                <i class="bi bi-plus-lg"></i> 新增采购订单
                             </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="suppliers-table">
+                                <table class="table table-hover" id="purchase-orders-table">
                                     <thead>
                                         <tr>
-                                            <th>编码</th>
-                                            <th>名称</th>
-                                            <th>联系人</th>
-                                            <th>电话</th>
+                                            <th>订单号</th>
+                                            <th>供应商</th>
+                                            <th>日期</th>
+                                            <th>金额</th>
+                                            <th>状态</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
@@ -698,20 +769,21 @@
                 <div class="module d-none" id="sales-module">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>客户管理</span>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal">
-                                <i class="bi bi-plus-lg"></i> 新增客户
+                            <span>销售订单管理</span>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#salesOrderModal">
+                                <i class="bi bi-plus-lg"></i> 新增销售订单
                             </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="customers-table">
+                                <table class="table table-hover" id="sales-orders-table">
                                     <thead>
                                         <tr>
-                                            <th>编码</th>
-                                            <th>名称</th>
-                                            <th>联系人</th>
-                                            <th>电话</th>
+                                            <th>订单号</th>
+                                            <th>客户</th>
+                                            <th>日期</th>
+                                            <th>金额</th>
+                                            <th>状态</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
@@ -728,21 +800,20 @@
                 <div class="module d-none" id="inventory-module">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>商品管理</span>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal">
-                                <i class="bi bi-plus-lg"></i> 新增商品
-                            </button>
+                            <span>库存管理</span>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="products-table">
+                                <table class="table table-hover" id="inventory-table">
                                     <thead>
                                         <tr>
-                                            <th>编码</th>
-                                            <th>名称</th>
-                                            <th>分类</th>
-                                            <th>单位</th>
-                                            <th>操作</th>
+                                            <th>商品编码</th>
+                                            <th>商品名称</th>
+                                            <th>仓库</th>
+                                            <th>数量</th>
+                                            <th>单位成本</th>
+                                            <th>总成本</th>
+                                            <th>最后更新</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -797,6 +868,82 @@
         </div>
     </div>
 
+    <!-- 凭证模态框 -->
+    <div class="modal fade" id="voucherModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增凭证</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="voucher-form">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">凭证日期</label>
+                                <input type="date" class="form-control" name="voucher_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">摘要</label>
+                                <input type="text" class="form-control" name="description">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">凭证明细</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="voucher-entries-table">
+                                    <thead>
+                                        <tr>
+                                            <th>科目</th>
+                                            <th>摘要</th>
+                                            <th>借方金额</th>
+                                            <th>贷方金额</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select class="form-select account-select" name="account_code">
+                                                    <option value="">请选择科目</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control" name="entry_description"></td>
+                                            <td><input type="number" class="form-control debit-amount" name="debit_amount" step="0.01" min="0"></td>
+                                            <td><input type="number" class="form-control credit-amount" name="credit_amount" step="0.01" min="0"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-entry">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-entry-btn">添加分录</button>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <strong>借方合计:</strong> <span id="total-debit">0.00</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <strong>贷方合计:</strong> <span id="total-credit">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-voucher-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 会计科目模态框 -->
     <div class="modal fade" id="accountModal" tabindex="-1">
         <div class="modal-dialog">
@@ -842,6 +989,92 @@
         </div>
     </div>
 
+    <!-- 采购订单模态框 -->
+    <div class="modal fade" id="purchaseOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增采购订单</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="purchase-order-form">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">供应商</label>
+                                <select class="form-select" name="supplier_code" required>
+                                    <option value="">请选择供应商</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">订单日期</label>
+                                <input type="date" class="form-control" name="order_date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">交货日期</label>
+                                <input type="date" class="form-control" name="delivery_date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">描述</label>
+                                <input type="text" class="form-control" name="description">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">订单明细</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="purchase-order-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>商品</th>
+                                            <th>单位</th>
+                                            <th>数量</th>
+                                            <th>单价</th>
+                                            <th>金额</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select class="form-select product-select" name="product_code">
+                                                    <option value="">请选择商品</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control unit" name="unit" readonly></td>
+                                            <td><input type="number" class="form-control quantity" name="quantity" step="0.01" min="0"></td>
+                                            <td><input type="number" class="form-control unit-price" name="unit_price" step="0.01" min="0"></td>
+                                            <td><input type="number" class="form-control amount" name="amount" step="0.01" min="0" readonly></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-item-btn">添加商品</button>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="alert alert-info">
+                                    <strong>订单总金额:</strong> <span id="total-amount">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-purchase-order-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 供应商模态框 -->
     <div class="modal fade" id="supplierModal" tabindex="-1">
         <div class="modal-dialog">
@@ -878,6 +1111,92 @@
         </div>
     </div>
 
+    <!-- 销售订单模态框 -->
+    <div class="modal fade" id="salesOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增销售订单</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sales-order-form">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">客户</label>
+                                <select class="form-select" name="customer_code" required>
+                                    <option value="">请选择客户</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">订单日期</label>
+                                <input type="date" class="form-control" name="order_date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">交货日期</label>
+                                <input type="date" class="form-control" name="delivery_date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">描述</label>
+                                <input type="text" class="form-control" name="description">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">订单明细</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="sales-order-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>商品</th>
+                                            <th>单位</th>
+                                            <th>数量</th>
+                                            <th>单价</th>
+                                            <th>金额</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select class="form-select product-select" name="product_code">
+                                                    <option value="">请选择商品</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control unit" name="unit" readonly></td>
+                                            <td><input type="number" class="form-control quantity" name="quantity" step="0.01" min="0"></td>
+                                            <td><input type="number" class="form-control unit-price" name="unit_price" step="0.01" min="0"></td>
+                                            <td><input type="number" class="form-control amount" name="amount" step="0.01" min="0" readonly></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-sales-item-btn">添加商品</button>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="alert alert-info">
+                                    <strong>订单总金额:</strong> <span id="sales-total-amount">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-sales-order-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 客户模态框 -->
     <div class="modal fade" id="customerModal" tabindex="-1">
         <div class="modal-dialog">
@@ -914,6 +1233,44 @@
         </div>
     </div>
 
+    <!-- 库存记录模态框 -->
+    <div class="modal fade" id="inventoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增库存记录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventory-form">
+                        <div class="mb-3">
+                            <label class="form-label">商品</label>
+                            <select class="form-select" name="product_id" required>
+                                <option value="">请选择商品</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">仓库</label>
+                            <input type="text" class="form-control" name="warehouse" value="MAIN" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">数量</label>
+                            <input type="number" class="form-control" name="quantity" step="0.01" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">单位成本</label>
+                            <input type="number" class="form-control" name="unit_cost" step="0.01" min="0" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-inventory-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 商品模态框 -->
     <div class="modal fade" id="productModal" tabindex="-1">
         <div class="modal-dialog">
@@ -1015,11 +1372,62 @@
             });
             
             // 绑定保存按钮事件
+            document.getElementById('save-voucher-btn').addEventListener('click', saveVoucher);
             document.getElementById('save-account-btn').addEventListener('click', saveAccount);
             document.getElementById('save-supplier-btn').addEventListener('click', saveSupplier);
             document.getElementById('save-customer-btn').addEventListener('click', saveCustomer);
             document.getElementById('save-product-btn').addEventListener('click', saveProduct);
             document.getElementById('save-user-btn').addEventListener('click', saveUser);
+            document.getElementById('save-inventory-btn').addEventListener('click', saveInventory);
+            document.getElementById('save-purchase-order-btn').addEventListener('click', savePurchaseOrder);
+            document.getElementById('save-sales-order-btn').addEventListener('click', saveSalesOrder);
+            
+            // 绑定凭证分录相关事件
+            document.getElementById('add-entry-btn').addEventListener('click', addVoucherEntry);
+            document.querySelector('#voucher-entries-table tbody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-entry')) {
+                    removeVoucherEntry(e.target);
+                }
+            });
+            
+            // 监听金额输入变化
+            document.querySelector('#voucher-entries-table tbody').addEventListener('input', function(e) {
+                if (e.target.classList.contains('debit-amount') || e.target.classList.contains('credit-amount')) {
+                    calculateVoucherTotals();
+                }
+            });
+            
+            // 绑定采购订单相关事件
+            document.getElementById('add-item-btn').addEventListener('click', addPurchaseOrderItem);
+            document.querySelector('#purchase-order-items-table tbody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-item')) {
+                    removePurchaseOrderItem(e.target);
+                }
+            });
+            
+            // 监听采购订单金额输入变化
+            document.querySelector('#purchase-order-items-table tbody').addEventListener('input', function(e) {
+                if (e.target.classList.contains('quantity') || e.target.classList.contains('unit-price')) {
+                    calculatePurchaseOrderAmount(e.target);
+                    calculatePurchaseOrderTotal();
+                }
+            });
+            
+            // 绑定销售订单相关事件
+            document.getElementById('add-sales-item-btn').addEventListener('click', addSalesOrderItem);
+            document.querySelector('#sales-order-items-table tbody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-item')) {
+                    removeSalesOrderItem(e.target);
+                }
+            });
+            
+            // 监听销售订单金额输入变化
+            document.querySelector('#sales-order-items-table tbody').addEventListener('input', function(e) {
+                if (e.target.classList.contains('quantity') || e.target.classList.contains('unit-price')) {
+                    calculateSalesOrderAmount(e.target);
+                    calculateSalesOrderTotal();
+                }
+            });
             
             // 绑定系统开账按钮事件
             document.getElementById('open-system-btn').addEventListener('click', openSystem);
@@ -1067,16 +1475,16 @@
         function loadModuleData(module) {
             switch(module) {
                 case 'finance':
-                    loadAccounts();
+                    loadVouchers();
                     break;
                 case 'purchase':
-                    loadSuppliers();
+                    loadPurchaseOrders();
                     break;
                 case 'sales':
-                    loadCustomers();
+                    loadSalesOrders();
                     break;
                 case 'inventory':
-                    loadProducts();
+                    loadInventory();
                     break;
                 case 'system':
                     loadSystemStatus();
@@ -1088,6 +1496,41 @@
         function loadDashboardData() {
             // 这里可以加载实际的控制台数据
             console.log('加载控制台数据');
+        }
+        
+        // 加载凭证列表
+        function loadVouchers() {
+            fetch(`${baseURL}/finance/vouchers`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#vouchers-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const vouchers = [
+                        {voucher_no: 'V20251105001', voucher_date: '2025-11-05', description: '收到投资款', total_amount: 1000000, status: '已审核'},
+                        {voucher_no: 'V20251105002', voucher_date: '2025-11-05', description: '购买办公设备', total_amount: 50000, status: '已审核'}
+                    ];
+                    
+                    vouchers.forEach(voucher => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${voucher.voucher_no}</td>
+                            <td>${voucher.voucher_date}</td>
+                            <td>${voucher.description}</td>
+                            <td>¥${voucher.total_amount.toLocaleString()}</td>
+                            <td><span class="badge bg-success">${voucher.status}</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">查看</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载凭证列表失败:', error);
+                    alert('加载凭证列表失败');
+                });
         }
         
         // 加载会计科目
@@ -1137,6 +1580,97 @@
         // 获取余额方向文本
         function getBalanceDirectionText(direction) {
             return direction === 'DEBIT' ? '借方' : '贷方';
+        }
+        
+        // 保存凭证
+        function saveVoucher() {
+            const form = document.getElementById('voucher-form');
+            const formData = new FormData(form);
+            const voucher = Object.fromEntries(formData);
+            
+            // 获取凭证明细
+            const entries = [];
+            document.querySelectorAll('#voucher-entries-table tbody tr').forEach(row => {
+                const accountCode = row.querySelector('.account-select').value;
+                const entryDescription = row.querySelector('input[name="entry_description"]').value;
+                const debitAmount = parseFloat(row.querySelector('.debit-amount').value) || 0;
+                const creditAmount = parseFloat(row.querySelector('.credit-amount').value) || 0;
+                
+                if (accountCode) {
+                    entries.push({
+                        account_code: accountCode,
+                        description: entryDescription,
+                        debit_amount: debitAmount,
+                        credit_amount: creditAmount
+                    });
+                }
+            });
+            
+            voucher.entries = entries;
+            
+            fetch(`${baseURL}/finance/vouchers`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(voucher)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('凭证保存成功');
+                bootstrap.Modal.getInstance(document.getElementById('voucherModal')).hide();
+                loadVouchers();
+            })
+            .catch(error => {
+                console.error('保存凭证失败:', error);
+                alert('保存凭证失败');
+            });
+        }
+        
+        // 添加凭证分录
+        function addVoucherEntry() {
+            const tbody = document.querySelector('#voucher-entries-table tbody');
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>
+                    <select class="form-select account-select" name="account_code">
+                        <option value="">请选择科目</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" name="entry_description"></td>
+                <td><input type="number" class="form-control debit-amount" name="debit_amount" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control credit-amount" name="credit_amount" step="0.01" min="0"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-entry">删除</button>
+                </td>
+            `;
+        }
+        
+        // 删除凭证分录
+        function removeVoucherEntry(button) {
+            const row = button.closest('tr');
+            if (document.querySelectorAll('#voucher-entries-table tbody tr').length > 1) {
+                row.remove();
+                calculateVoucherTotals();
+            } else {
+                alert('至少需要保留一个分录');
+            }
+        }
+        
+        // 计算凭证合计
+        function calculateVoucherTotals() {
+            let totalDebit = 0;
+            let totalCredit = 0;
+            
+            document.querySelectorAll('#voucher-entries-table tbody tr').forEach(row => {
+                const debit = parseFloat(row.querySelector('.debit-amount').value) || 0;
+                const credit = parseFloat(row.querySelector('.credit-amount').value) || 0;
+                totalDebit += debit;
+                totalCredit += credit;
+            });
+            
+            document.getElementById('total-debit').textContent = totalDebit.toFixed(2);
+            document.getElementById('total-credit').textContent = totalCredit.toFixed(2);
         }
         
         // 保存会计科目
@@ -1291,6 +1825,113 @@
                 });
         }
         
+        // 加载采购订单
+        function loadPurchaseOrders() {
+            fetch(`${baseURL}/purchase/orders`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#purchase-orders-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const orders = [
+                        {order_no: 'PO20251105001', supplier: '供应商A', order_date: '2025-11-05', total_amount: 100000, status: '待审批'},
+                        {order_no: 'PO20251105002', supplier: '供应商B', order_date: '202511-05', total_amount: 50000, status: '已批准'}
+                    ];
+                    
+                    orders.forEach(order => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${order.order_no}</td>
+                            <td>${order.supplier}</td>
+                            <td>${order.order_date}</td>
+                            <td>¥${order.total_amount.toLocaleString()}</td>
+                            <td><span class="badge bg-warning">${order.status}</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">查看</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载采购订单失败:', error);
+                    alert('加载采购订单失败');
+                });
+        }
+        
+        // 加载销售订单
+        function loadSalesOrders() {
+            fetch(`${baseURL}/sales/orders`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#sales-orders-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const orders = [
+                        {order_no: 'SO20251105001', customer: '客户A', order_date: '2025-11-05', total_amount: 80000, status: '待审批'},
+                        {order_no: 'SO20251105002', customer: '客户B', order_date: '2025-11-05', total_amount: 60000, status: '已发货'}
+                    ];
+                    
+                    orders.forEach(order => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${order.order_no}</td>
+                            <td>${order.customer}</td>
+                            <td>${order.order_date}</td>
+                            <td>¥${order.total_amount.toLocaleString()}</td>
+                            <td><span class="badge bg-success">${order.status}</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">查看</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载销售订单失败:', error);
+                    alert('加载销售订单失败');
+                });
+        }
+        
+        // 加载库存
+        function loadInventory() {
+            fetch(`${baseURL}/inventory`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#inventory-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    // 模拟数据
+                    const inventory = [
+                        {product_code: 'PRD001', product_name: '智能手机', warehouse: 'MAIN', quantity: 100, unit_cost: 2000, total_cost: 200000, last_updated: '2025-11-05'},
+                        {product_code: 'PRD002', product_name: '笔记本电脑', warehouse: 'MAIN', quantity: 50, unit_cost: 5000, total_cost: 250000, last_updated: '2025-11-05'}
+                    ];
+                    
+                    inventory.forEach(item => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${item.product_code}</td>
+                            <td>${item.product_name}</td>
+                            <td>${item.warehouse}</td>
+                            <td>${item.quantity}</td>
+                            <td>¥${item.unit_cost.toLocaleString()}</td>
+                            <td>¥${item.total_cost.toLocaleString()}</td>
+                            <td>${item.last_updated}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">查看</button>
+                                <button class="btn btn-sm btn-outline-danger">删除</button>
+                            </td>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('加载库存失败:', error);
+                    alert('加载库存失败');
+                });
+        }
+        
         // 保存商品
         function saveProduct() {
             const form = document.getElementById('product-form');
@@ -1333,6 +1974,225 @@
                     alert('系统开账失败');
                 });
             }
+        }
+        
+        // 保存采购订单
+        function savePurchaseOrder() {
+            const form = document.getElementById('purchase-order-form');
+            const formData = new FormData(form);
+            const order = Object.fromEntries(formData);
+            
+            // 获取订单明细
+            const items = [];
+            document.querySelectorAll('#purchase-order-items-table tbody tr').forEach(row => {
+                const productCode = row.querySelector('.product-select').value;
+                const unit = row.querySelector('.unit').value;
+                const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+                const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+                const amount = parseFloat(row.querySelector('.amount').value) || 0;
+                
+                if (productCode) {
+                    items.push({
+                        product_code: productCode,
+                        unit: unit,
+                        quantity: quantity,
+                        unit_price: unitPrice,
+                        amount: amount
+                    });
+                }
+            });
+            
+            order.items = items;
+            
+            fetch(`${baseURL}/purchase/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('采购订单保存成功');
+                bootstrap.Modal.getInstance(document.getElementById('purchaseOrderModal')).hide();
+                loadPurchaseOrders();
+            })
+            .catch(error => {
+                console.error('保存采购订单失败:', error);
+                alert('保存采购订单失败');
+            });
+        }
+        
+        // 保存销售订单
+        function saveSalesOrder() {
+            const form = document.getElementById('sales-order-form');
+            const formData = new FormData(form);
+            const order = Object.fromEntries(formData);
+            
+            // 获取订单明细
+            const items = [];
+            document.querySelectorAll('#sales-order-items-table tbody tr').forEach(row => {
+                const productCode = row.querySelector('.product-select').value;
+                const unit = row.querySelector('.unit').value;
+                const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+                const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+                const amount = parseFloat(row.querySelector('.amount').value) || 0;
+                
+                if (productCode) {
+                    items.push({
+                        product_code: productCode,
+                        unit: unit,
+                        quantity: quantity,
+                        unit_price: unitPrice,
+                        amount: amount
+                    });
+                }
+            });
+            
+            order.items = items;
+            
+            fetch(`${baseURL}/sales/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('销售订单保存成功');
+                bootstrap.Modal.getInstance(document.getElementById('salesOrderModal')).hide();
+                loadSalesOrders();
+            })
+            .catch(error => {
+                console.error('保存销售订单失败:', error);
+                alert('保存销售订单失败');
+            });
+        }
+        
+        // 保存库存记录
+        function saveInventory() {
+            const form = document.getElementById('inventory-form');
+            const formData = new FormData(form);
+            const inventory = Object.fromEntries(formData);
+            
+            fetch(`${baseURL}/inventory`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(inventory)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('库存记录保存成功');
+                bootstrap.Modal.getInstance(document.getElementById('inventoryModal')).hide();
+                loadInventory();
+            })
+            .catch(error => {
+                console.error('保存库存记录失败:', error);
+                alert('保存库存记录失败');
+            });
+        }
+        
+        // 添加采购订单商品
+        function addPurchaseOrderItem() {
+            const tbody = document.querySelector('#purchase-order-items-table tbody');
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>
+                    <select class="form-select product-select" name="product_code">
+                        <option value="">请选择商品</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control unit" name="unit" readonly></td>
+                <td><input type="number" class="form-control quantity" name="quantity" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control unit-price" name="unit_price" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control amount" name="amount" step="0.01" min="0" readonly></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-item">删除</button>
+                </td>
+            `;
+        }
+        
+        // 删除采购订单商品
+        function removePurchaseOrderItem(button) {
+            const row = button.closest('tr');
+            if (document.querySelectorAll('#purchase-order-items-table tbody tr').length > 1) {
+                row.remove();
+                calculatePurchaseOrderTotal();
+            } else {
+                alert('至少需要保留一个商品');
+            }
+        }
+        
+        // 计算采购订单商品金额
+        function calculatePurchaseOrderAmount(input) {
+            const row = input.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const amount = quantity * unitPrice;
+            row.querySelector('.amount').value = amount.toFixed(2);
+        }
+        
+        // 计算采购订单总金额
+        function calculatePurchaseOrderTotal() {
+            let total = 0;
+            document.querySelectorAll('#purchase-order-items-table tbody tr').forEach(row => {
+                const amount = parseFloat(row.querySelector('.amount').value) || 0;
+                total += amount;
+            });
+            document.getElementById('total-amount').textContent = total.toFixed(2);
+        }
+        
+        // 添加销售订单商品
+        function addSalesOrderItem() {
+            const tbody = document.querySelector('#sales-order-items-table tbody');
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>
+                    <select class="form-select product-select" name="product_code">
+                        <option value="">请选择商品</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control unit" name="unit" readonly></td>
+                <td><input type="number" class="form-control quantity" name="quantity" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control unit-price" name="unit_price" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control amount" name="amount" step="0.01" min="0" readonly></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-item">删除</button>
+                </td>
+            `;
+        }
+        
+        // 删除销售订单商品
+        function removeSalesOrderItem(button) {
+            const row = button.closest('tr');
+            if (document.querySelectorAll('#sales-order-items-table tbody tr').length > 1) {
+                row.remove();
+                calculateSalesOrderTotal();
+            } else {
+                alert('至少需要保留一个商品');
+            }
+        }
+        
+        // 计算销售订单商品金额
+        function calculateSalesOrderAmount(input) {
+            const row = input.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const amount = quantity * unitPrice;
+            row.querySelector('.amount').value = amount.toFixed(2);
+        }
+        
+        // 计算销售订单总金额
+        function calculateSalesOrderTotal() {
+            let total = 0;
+            document.querySelectorAll('#sales-order-items-table tbody tr').forEach(row => {
+                const amount = parseFloat(row.querySelector('.amount').value) || 0;
+                total += amount;
+            });
+            document.getElementById('sales-total-amount').textContent = total.toFixed(2);
         }
         
         // 保存用户

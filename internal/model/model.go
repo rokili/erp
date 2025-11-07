@@ -290,3 +290,58 @@ type CreateSystemConfigDTO struct {
 	ConfigValue string `json:"config_value"`
 	Description string `json:"description"`
 }
+
+// SystemStatusResponse 系统状态响应
+type SystemStatusResponse struct {
+	IsOpened bool   `json:"is_opened"`
+	Message  string `json:"message"`
+}
+
+// User 用户
+type User struct {
+	ID        int64     `db:"id" json:"id"`
+	Username  string    `db:"username" json:"username"`
+	Password  string    `db:"password" json:"-"` // 密码（不返回给前端）
+	Name      string    `db:"name" json:"name"`
+	Email     string    `db:"email" json:"email"`
+	Phone     string    `db:"phone" json:"phone"`
+	Status    string    `db:"status" json:"status"` // 状态 (ACTIVE, INACTIVE)
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
+}
+
+// Role 角色
+type Role struct {
+	ID          int64     `db:"id" json:"id"`
+	Name        string    `db:"name" json:"name"`
+	Description string    `db:"description" json:"description"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
+}
+
+// UserRole 用户角色关联
+type UserRole struct {
+	ID        int64     `db:"id" json:"id"`
+	UserID    int64     `db:"user_id" json:"user_id"`
+	RoleID    int64     `db:"role_id" json:"role_id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+}
+
+// Permission 权限
+type Permission struct {
+	ID          int64     `db:"id" json:"id"`
+	Name        string    `db:"name" json:"name"`
+	Description string    `db:"description" json:"description"`
+	Resource    string    `db:"resource" json:"resource"`
+	Action      string    `db:"action" json:"action"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
+}
+
+// RolePermission 角色权限关联
+type RolePermission struct {
+	ID           int64     `db:"id" json:"id"`
+	RoleID       int64     `db:"role_id" json:"role_id"`
+	PermissionID int64     `db:"permission_id" json:"permission_id"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
+}

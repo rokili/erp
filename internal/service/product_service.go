@@ -11,21 +11,21 @@ func NewProductService() *ProductService {
 }
 
 // CreateCategory 创建商品分类
-func (s *ProductService) CreateCategory(category *model.Category) error {
+func (s *ProductService) CreateCategory(category *model.ProductCategory) error {
 	// TODO: 实现创建商品分类逻辑
 	return nil
 }
 
 // GetCategory 获取商品分类
-func (s *ProductService) GetCategory(id int) (*model.Category, error) {
+func (s *ProductService) GetCategory(id int) (*model.ProductCategory, error) {
 	// TODO: 实现获取商品分类逻辑
-	return &model.Category{}, nil
+	return &model.ProductCategory{}, nil
 }
 
 // ListCategories 获取所有商品分类
-func (s *ProductService) ListCategories() ([]*model.Category, error) {
+func (s *ProductService) ListCategories() ([]*model.ProductCategory, error) {
 	// TODO: 实现获取所有商品分类逻辑
-	return []*model.Category{}, nil
+	return []*model.ProductCategory{}, nil
 }
 
 // CreateProduct 创建商品

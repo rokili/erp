@@ -23,7 +23,7 @@ type Server struct {
 func New(cfg *config.Config) *Server {
 	// 初始化数据库连接
 	db, err := sqlx.Connect("postgres", fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Database.Host,
 		cfg.Database.Port,
 		cfg.Database.User,

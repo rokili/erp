@@ -1,47 +1,11 @@
 package main
 
 import (
-	"erp/internal/config"
-<<<<<<< HEAD
-	"erp/internal/handler"
-	"erp/internal/repository"
-	"log"
-
-	"github.com/gin-gonic/gin"
-)
-
-func main() {
-	// 初始化数据库
-	repository.InitDB()
-
-	// 加载配置
-	cfg := config.Load()
-
-	// 设置Gin模式
-	if cfg.Server.Debug {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	// 创建Gin引擎
-	r := gin.Default()
-
-	// 提供静态文件服务
-	r.Static("/web", "./web")
-
-	// 注册路由
-	handler.RegisterRoutes(r)
-
-	// 启动服务器
-	addr := cfg.Server.Host + ":" + cfg.Server.Port
-	log.Printf("Server starting on %s", addr)
-	if err := r.Run(addr); err != nil {
-		log.Fatal("Failed to start server:", err)
-=======
-	"erp/internal/server"
 	"fmt"
 	"log"
+
+	"erp/internal/config"
+	"erp/internal/server"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -50,7 +14,7 @@ func main() {
 func initDB(cfg *config.Config) {
 	// 连接到PostgreSQL数据库
 	db, err := sqlx.Connect("postgres", fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Database.Host,
 		cfg.Database.Port,
 		cfg.Database.User,
@@ -337,6 +301,5 @@ func main() {
 	log.Printf("Starting server on %s:%s", cfg.Server.Host, cfg.Server.Port)
 	if err := srv.Start(); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
->>>>>>> eb04c5bc7c6a1998a4c109ada9e19202dab00b44
 	}
 }
